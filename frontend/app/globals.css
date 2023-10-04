@@ -1,0 +1,310 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+  @import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Rubik:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+
+:root {
+  --foreground-rgb: 0, 0, 0;
+  --background-start-rgb: 214, 219, 220;
+  --background-end-rgb: 255, 255, 255;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --foreground-rgb: 255, 255, 255;
+    --background-start-rgb: 0, 0, 0;
+    --background-end-rgb: 0, 0, 0;
+  }
+}
+
+body {
+  font-family: 'Montserrat', sans-serif !important;
+  font-family: 'Poppins', sans-serif !important;
+  color: black;
+  background: white;
+}
+
+.footer-links {
+  a {
+    padding-bottom: 2px;
+  }
+}
+
+.slides-container {
+  -ms-overflow-style: none;
+  /* Internet Explorer 10+ */
+  scrollbar-width: none;
+  /* Firefox */
+}
+
+.slides-container::-webkit-scrollbar {
+  display: none;
+  /* Safari and Chrome */
+}
+
+
+/* global.css */
+.bg-gradient-blue {
+  background-image: linear-gradient(90deg, #3490dc 0%, #6574cd 100%);
+}
+
+.bg-gradient-red {
+  background-image: linear-gradient(90deg, #f56565 0%, #c53030 100%);
+}
+
+.bg-gradient-green {
+  background-image: linear-gradient(90deg, #48bb78 0%, #38a169 100%);
+}
+
+.bg-gradient-purple {
+  background-image: linear-gradient(90deg, #9f7aea 0%, #805ad5 100%);
+}
+
+.bg-gradient-yellow {
+  background-image: linear-gradient(90deg, #f6e05e 0%, #f6e05e 100%);
+}
+
+.bg-gradient-pink {
+  background-image: linear-gradient(90deg, #f687b3 0%, #ed64a6 100%);
+}
+
+.bg-gradient-orange {
+  background-image: linear-gradient(90deg, #f59e0b 0%, #d97706 100%);
+}
+
+.bg-gradient-cyan {
+  background-image: linear-gradient(90deg, #0ea5e9 0%, #047481 100%);
+}
+
+.bg-gradient-gray {
+  background-image: linear-gradient(90deg, #cbd5e0 0%, #a0aec0 100%);
+}
+
+.bg-gradient-teal {
+  background-image: linear-gradient(90deg, #4fd1c5 0%, #38a89d 100%);
+}
+
+.bg-gradient-indigo {
+  background-image: linear-gradient(90deg, #667eea 0%, #5a67d8 100%);
+}
+
+.bg-gradient-hotpink {
+  background-image: linear-gradient(90deg, #ff6b6b 0%, #f66d9b 100%);
+}
+
+.bg-gradient-darkblue {
+  background-image: linear-gradient(90deg, #0a2472 0%, #1e3799 100%);
+}
+
+.bg-gradient-emerald {
+  background-image: linear-gradient(90deg, #2ecc71 0%, #27ae60 100%);
+}
+
+.bg-gradient-lime {
+  background-image: linear-gradient(90deg, #c7ecee 0%, #95afc0 100%);
+}
+
+.bg-gradient-skyblue {
+  background-image: linear-gradient(90deg, #87CEEB 0%, #6CA6CD 100%);
+}
+
+.bg-gradient-gold {
+  background-image: linear-gradient(90deg, #FFD700 0%, #FFA500 100%);
+}
+
+.bg-gradient-salmon {
+  background-image: linear-gradient(90deg, #FA8072 0%, #FF6347 100%);
+}
+
+.bg-gradient-magenta {
+  background-image: linear-gradient(90deg, #FF00FF 0%, #9932CC 100%);
+}
+
+.bg-gradient-lavender {
+  background-image: linear-gradient(90deg, #E6E6FA 0%, #9370DB 100%);
+}
+
+.bg-gradient-chocolate {
+  background-image: linear-gradient(90deg, #D2691E 0%, #8B4513 100%);
+}
+
+.bg-gradient-turquoise {
+  background-image: linear-gradient(90deg, #40E0D0 0%, #20B2AA 100%);
+}
+
+.bg-gradient-crimson {
+  background-image: linear-gradient(90deg, #DC143C 0%, #8B0000 100%);
+}
+
+.bg-gradient-olive {
+  background-image: linear-gradient(90deg, #808000 0%, #556B2F 100%);
+}
+
+.bg-gradient-slategray {
+  background-image: linear-gradient(90deg, #708090 0%, #2F4F4F 100%);
+}
+
+.bg-gradient-sienna {
+  background-image: linear-gradient(90deg, #A0522D 0%, #8B4513 100%);
+}
+
+.bg-gradient-peru {
+  background-image: linear-gradient(90deg, #CD853F 0%, #8B5A2B 100%);
+}
+
+.bg-gradient-orchid {
+  background-image: linear-gradient(90deg, #DA70D6 0%, #9932CC 100%);
+}
+
+.bg-gradient-coral {
+  background-image: linear-gradient(90deg, #FF6B6B 0%, #FF4500 100%);
+}
+
+.bg-gradient-plum {
+  background-image: linear-gradient(90deg, #DDA0DD 0%, #9932CC 100%);
+}
+
+.bg-gradient-navy {
+  background-image: linear-gradient(90deg, #000080 0%, #00008B 100%);
+}
+
+.bg-gradient-steelblue {
+  background-image: linear-gradient(90deg, #4682B4 0%, #5F9EA0 100%);
+}
+
+.bg-gradient-forestgreen {
+  background-image: linear-gradient(90deg, #228B22 0%, #008000 100%);
+}
+
+.bg-gradient-tomato {
+  background-image: linear-gradient(90deg, #FF6347 0%, #FF4500 100%);
+}
+
+.bg-gradient-springgreen {
+  background-image: linear-gradient(90deg, #00FF7F 0%, #00FF00 100%);
+}
+
+.bg-gradient-royalblue {
+  background-image: linear-gradient(90deg, #4169E1 0%, #0000CD 100%);
+}
+
+.bg-gradient-rosybrown {
+  background-image: linear-gradient(90deg, #BC8F8F 0%, #D2B48C 100%);
+}
+
+.bg-gradient-ivory {
+  background-image: linear-gradient(90deg, #FFFFF0 0%, #FFD700 100%);
+}
+
+.bg-gradient-darkslategray {
+  background-image: linear-gradient(90deg, #2F4F4F 0%, #1E90FF 100%);
+}
+
+.bg-gradient-cadetblue {
+  background-image: linear-gradient(90deg, #5F9EA0 0%, #4682B4 100%);
+}
+
+.bg-gradient-mediumseagreen {
+  background-image: linear-gradient(90deg, #3CB371 0%, #00FA9A 100%);
+}
+
+.bg-gradient-indianred {
+  background-image: linear-gradient(90deg, #CD5C5C 0%, #8B3A3A 100%);
+}
+
+.bg-gradient-mediumorchid {
+  background-image: linear-gradient(90deg, #BA55D3 0%, #9370DB 100%);
+}
+
+.bg-gradient-mediumvioletred {
+  background-image: linear-gradient(90deg, #C71585 0%, #8B008B 100%);
+}
+
+.bg-gradient-antiquewhite {
+  background-image: linear-gradient(90deg, #FAEBD7 0%, #D2B48C 100%);
+}
+
+.bg-gradient-dodgerblue {
+  background-image: linear-gradient(90deg, #1E90FF 0%, #0000FF 100%);
+}
+
+.bg-gradient-gainsboro {
+  background-image: linear-gradient(90deg, #DCDCDC 0%, #D3D3D3 100%);
+}
+
+.bg-gradient-lightseagreen {
+  background-image: linear-gradient(90deg, #20B2AA 0%, #3CB371 100%);
+}
+
+.bg-gradient-lightcoral {
+  background-image: linear-gradient(90deg, #F08080 0%, #CD5C5C 100%);
+}
+
+.bg-gradient-rosybrown {
+  background-image: linear-gradient(90deg, #BC8F8F 0%, #D2B48C 100%);
+}
+
+.bg-gradient-thistle {
+  background-image: linear-gradient(90deg, #D8BFD8 0%, #9932CC 100%);
+}
+
+.bg-gradient-darkorange {
+  background-image: linear-gradient(90deg, #FF8C00 0%, #FF4500 100%);
+}
+
+.bg-gradient-mediumspringgreen {
+  background-image: linear-gradient(90deg, #00FA9A 0%, #00FF7F 100%);
+}
+
+.bg-gradient-deeppink {
+  background-image: linear-gradient(90deg, #FF1493 0%, #FF4500 100%);
+}
+
+.bg-gradient-darkorchid {
+  background-image: linear-gradient(90deg, #9932CC 0%, #8B008B 100%);
+}
+
+.bg-gradient-midnightblue {
+  background-image: linear-gradient(90deg, #191970 0%, #000080 100%);
+}
+
+.bg-gradient-darkgoldenrod {
+  background-image: linear-gradient(90deg, #B8860B 0%, #8B4513 100%);
+}
+
+.bg-gradient-seagreen {
+  background-image: linear-gradient(90deg, #2E8B57 0%, #008B8B 100%);
+}
+
+.bg-gradient-brown {
+  background-image: linear-gradient(90deg, #A52A2A 0%, #8B4513 100%);
+}
+
+.bg-gradient-firebrick {
+  background-image: linear-gradient(90deg, #B22222 0%, #8B0000 100%);
+}
+
+.bg-gradient-yellowgreen {
+  background-image: linear-gradient(90deg, #ADFF2F 0%, #008000 100%);
+}
+
+.bg-gradient-sandybrown {
+  background-image: linear-gradient(90deg, #F4A460 0%, #8B4513 100%);
+}
+
+.bg-gradient-darkseagreen {
+  background-image: linear-gradient(90deg, #8FBC8F 0%, #2E8B57 100%);
+}
+
+.bg-gradient-palevioletred {
+  background-image: linear-gradient(90deg, #DB7093 0%, #8B008B 100%);
+}
+
+.bg-gradient-lightpink {
+  background-image: linear-gradient(90deg, #FFB6C1 0%, #FF69B4 100%);
+}
+
+.bg-gradient-olivedrab {
+  background-image: linear-gradient(90deg, #6B8E23 0%, #556B2F 100%);
+}
