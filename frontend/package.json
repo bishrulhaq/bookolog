@@ -1,5 +1,6 @@
 {
-  "name": "front-end",
+  "name": "bookolog-frontend",
+  "description": "Bookolog Frontend",
   "version": "0.1.0",
   "private": true,
   "scripts": {
