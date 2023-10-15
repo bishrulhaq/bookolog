@@ -1,5 +1,5 @@
 # Exclude node_modules directory since it will be re-created during the image build
-# node_modules/
+node_modules/
 
 # Exclude any development or build-related files
 *.log

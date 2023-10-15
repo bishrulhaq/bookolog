@@ -1,3 +1,6 @@
+
+const uri = process.env.APP_ENV == 'development' ? 'http://localhost:4000/api' : 'https://bookolog.com/api';
+
 export async function fetchBooks() {
     return fetch('http://backend:4000/api/book').then((response) => {
         if (!response.ok) {
@@ -16,7 +19,7 @@ export async function fetchBooks() {
 
 
 export async function fetchBooksByTitle(searchByTitle) {
-    return fetch(`http://localhost:4000/api/book/search-title?title=${searchByTitle}`).then((response) => {
+    return fetch(`${uri}/book/search-title?title=${searchByTitle}`).then((response) => {
         if (!response.ok) {
             throw new Error('Network response was not ok');
         }
@@ -33,7 +36,7 @@ export async function fetchBooksByTitle(searchByTitle) {
 
 
 export async function fetchAuthorById(getById) {
-    return fetch(`http://localhost:4000/api/author/${getById}`).then((response) => {
+    return fetch(`${uri}/author/${getById}`).then((response) => {
         if (!response.ok) {
             throw new Error('Network response was not ok');
         }
@@ -50,7 +53,7 @@ export async function fetchAuthorById(getById) {
 
 export async function fetchBooksByISBN(searchByISBN) {
 
-    return fetch(`http://localhost:4000/api/book/isbn?isbn=${searchByISBN}`).then((response) => {
+    return fetch(`${uri}/book/isbn?isbn=${searchByISBN}`).then((response) => {
         if (!response.ok) {
             throw new Error('Network response was not ok');
         }
@@ -67,7 +70,7 @@ export async function fetchBooksByISBN(searchByISBN) {
 
 
 export async function fetchBooksByAuthor(searchByAuthor) {
-    return fetch(`http://localhost:4000/api/book/search-authors?author=${searchByAuthor}`).then((response) => {
+    return fetch(`${uri}/book/search-authors?author=${searchByAuthor}`).then((response) => {
         if (!response.ok) {
             throw new Error('Network response was not ok');
         }
@@ -84,7 +87,7 @@ export async function fetchBooksByAuthor(searchByAuthor) {
 
 
 export async function fetchBooksByGenre(searchByGenre) {
-    return fetch(`http://localhost:4000/api/book/search-category?category=${searchByGenre}`).then((response) => {
+    return fetch(`${uri}/book/search-category?category=${searchByGenre}`).then((response) => {
         if (!response.ok) {
             throw new Error('Network response was not ok');
         }
@@ -102,7 +105,7 @@ export async function fetchBooksByGenre(searchByGenre) {
 
 export async function fetchHomeScreenGenres() {
 
-    return fetch('http://localhost:4000/api/category', { cache: 'force-cache' }).then((response) => {
+    return fetch(`${uri}/category`, { cache: 'force-cache' }).then((response) => {
         if (!response.ok) {
             throw new Error('Network response was not ok');
         }
@@ -121,7 +124,7 @@ export async function fetchHomeScreenGenres() {
 
 export async function fetchAllGenres() {
 
-    return fetch('http://localhost:4000/api/category/all').then((response) => {
+    return fetch(`${uri}/category/all`).then((response) => {
         if (!response.ok) {
             throw new Error('Network response was not ok');
         }
@@ -140,7 +143,7 @@ export async function fetchAllGenres() {
 
 export async function fetchBookById(getByd) {
 
-    return fetch(`http://localhost:4000/api/book/${getByd}`).then((response) => {
+    return fetch(`${uri}/book/${getByd}`).then((response) => {
         if (!response.ok) {
             throw new Error('Network response was not ok');
         }

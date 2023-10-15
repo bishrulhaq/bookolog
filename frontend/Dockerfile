@@ -1,20 +1,23 @@
 # Use the official Node.js image as the base image
 FROM node:18.15.0-alpine
 
-# Set the working directory in the container
+# Set the working directory in the container to /app
+RUN apk add --no-cache libc6-compat
+
+# Set the working directory in the container to /app
 WORKDIR /app/frontend
 
 # Copy the package.json and package-lock.json files to the container
 COPY package*.json ./
 
-# Install project dependencies
 RUN npm install
 
-# Copy the rest of the application code to the container
+# Install the dependencies
 COPY . .
 
-# Expose the port that the Next.js application will run on
-EXPOSE 3000
+# Run npm install to install the dependencies of the frontend
+COPY docker-entrypoint.sh /
 
-# Start the development server
-CMD ["npm", "run", "dev"]
+CMD ["sh", "-c", "if [ \"$APP_ENV\" == \"development\" ]; then npm run dev; else chmod +x /docker-entrypoint.sh; fi"]
+
+ENTRYPOINT ["/bin/sh", "/docker-entrypoint.sh"]
