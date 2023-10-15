@@ -18,8 +18,21 @@ jobs:
     - name: Build Frontend Image
       run: |
         docker-compose build frontend
- 
-    - name: BuildAndPushFrontend
+
+    - name: Build Backend Image
       run: |
-        docker tag frontend:local reg.bookolog.com/bookolog/frontend:${{ github.run_number }}
-        docker push reg.bookolog.com/bookolog/frontend:${{ github.run_number }}
+        docker-compose build backend
+
+    - name: Show All Images
+      run: |
+        docker images
+ 
+    - name: Push Frontend
+      run: |
+        docker tag frontend:local reg.bookolog.com/bookolog/frontend
+        docker push reg.bookolog.com/bookolog/frontend
+    
+    - name: Push Backend
+      run: |
+        docker tag backend:local reg.bookolog.com/bookolog/backend
+        docker push reg.bookolog.com/bookolog/backend  
