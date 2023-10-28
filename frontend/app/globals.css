@@ -308,3 +308,8 @@ body {
 .bg-gradient-olivedrab {
   background-image: linear-gradient(90deg, #6B8E23 0%, #556B2F 100%);
 }
+
+.b-shadow {
+  filter: drop-shadow(4px 4px 4px rgba(0, 0, 0, 0.4));
+}
+  
