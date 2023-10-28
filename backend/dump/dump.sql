@@ -15,12 +15,12 @@
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 
--- Dumping database structure for book_explorer
-DROP DATABASE IF EXISTS `book_explorer`;
-CREATE DATABASE IF NOT EXISTS `book_explorer` /*!40100 DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci */;
-USE `book_explorer`;
+-- Dumping database structure for bookolog
+DROP DATABASE IF EXISTS `bookolog`;
+CREATE DATABASE IF NOT EXISTS `bookolog` /*!40100 DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci */;
+USE `bookolog`;
 
--- Dumping structure for table book_explorer.authorBookJoins
+-- Dumping structure for table bookolog.authorBookJoins
 DROP TABLE IF EXISTS `authorBookJoins`;
 CREATE TABLE IF NOT EXISTS `authorBookJoins` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -35,7 +35,7 @@ CREATE TABLE IF NOT EXISTS `authorBookJoins` (
   CONSTRAINT `authorBookJoins_ibfk_2` FOREIGN KEY (`authorId`) REFERENCES `authors` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB AUTO_INCREMENT=199 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
--- Dumping data for table book_explorer.authorBookJoins: ~2 rows (approximately)
+-- Dumping data for table bookolog.authorBookJoins: ~2 rows (approximately)
 DELETE FROM `authorBookJoins`;
 INSERT INTO `authorBookJoins` (`id`, `createdAt`, `updatedAt`, `bookId`, `authorId`) VALUES
 	(1, '2023-09-26 18:46:32', '2023-09-26 18:46:32', 2, 1),
@@ -237,7 +237,7 @@ INSERT INTO `authorBookJoins` (`id`, `createdAt`, `updatedAt`, `bookId`, `author
 	(197, '2023-09-26 18:52:34', '2023-09-26 18:52:34', 221, 195),
 	(198, '2023-09-26 18:52:36', '2023-09-26 18:52:36', 222, 196);
 
--- Dumping structure for table book_explorer.authors
+-- Dumping structure for table bookolog.authors
 DROP TABLE IF EXISTS `authors`;
 CREATE TABLE IF NOT EXISTS `authors` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -255,7 +255,7 @@ CREATE TABLE IF NOT EXISTS `authors` (
   UNIQUE KEY `author_uid` (`author_uid`)
 ) ENGINE=InnoDB AUTO_INCREMENT=197 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
--- Dumping data for table book_explorer.authors: ~2 rows (approximately)
+-- Dumping data for table bookolog.authors: ~2 rows (approximately)
 DELETE FROM `authors`;
 INSERT INTO `authors` (`id`, `name`, `alternate_names`, `author_uid`, `slug`, `birth_year`, `death_year`, `biography`, `img_uri`, `createdAt`, `updatedAt`) VALUES
 	(1, 'A. G. Sitenko', NULL, 'OL327914A', 'a-g-sitenko', NULL, NULL, NULL, NULL, '2023-09-26 18:46:32', '2023-09-26 18:46:32'),
@@ -455,7 +455,7 @@ INSERT INTO `authors` (`id`, `name`, `alternate_names`, `author_uid`, `slug`, `b
 	(195, 'Hazel Rossotti', NULL, 'OL393313A', 'hazel-rossotti', NULL, NULL, NULL, NULL, '2023-09-26 18:52:34', '2023-09-26 18:52:34'),
 	(196, 'Edward Grant', NULL, 'OL448559A', 'edward-grant', '1926', NULL, NULL, NULL, '2023-09-26 18:52:36', '2023-09-26 18:52:36');
 
--- Dumping structure for table book_explorer.books
+-- Dumping structure for table bookolog.books
 DROP TABLE IF EXISTS `books`;
 CREATE TABLE IF NOT EXISTS `books` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -487,7 +487,7 @@ CREATE TABLE IF NOT EXISTS `books` (
   UNIQUE KEY `book_uid` (`book_uid`)
 ) ENGINE=InnoDB AUTO_INCREMENT=223 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
--- Dumping data for table book_explorer.books: ~197 rows (approximately)
+-- Dumping data for table bookolog.books: ~197 rows (approximately)
 DELETE FROM `books`;
 INSERT INTO `books` (`id`, `title`, `subtitle`, `book_uid`, `publisher`, `published_date`, `slug`, `description`, `maturityRating`, `contentVersion`, `language`, `search_info`, `categories`, `e_tag`, `google_uri`, `page_count`, `print_type`, `isbn_10`, `isbn_13`, `status`, `publish_country`, `book_authors`, `author_ids`, `createdAt`, `updatedAt`) VALUES
 	(1, 'Vitiligo', NULL, 'vc6kDwAAQBAJ', 'Springer', '2019-07-23', 'vitiligo', 'Since the first edition of this book was published, new knowledge has been gained on Vitiligo. This widely revised and updated second edition, written by worldwide experts in the field, fully reflects this progress. The apparently, simple and poorly symptomatic presentation of the disease has been a strong disadvantage to its study, as compared to other common chronic skin disorders such as psoriasis and atopic dermatitis. A good skin-based angle of attack is also lacking because generalized Vitiligo is clearly epitomizing the view of skin diseases as simple targets of a systemic unknown dysregulation (diathesis). This view has mostly restricted Vitiligo to the manifestation of an auto-immune diathesis and skin events, which are easily detected using skin biopsies in most other situations, have not been precisely recorded, with the argument that a clinical diagnosis was sufficient for the management of the patient with Vitiligo. This richly illustrated second edition reflects the constant international effort to share the information gathered about this disorder at the clinical, pathophysiological and therapeutic levels. Its aim still being to bridge current knowledge at the clinical and investigative level, to point to the many unsolved issues, and to delineate future priorities for research.', 'NOT_MATURE', '1.2.2.0.preview.3', 'en', NULL, '["Medical"]', 'Rg5MmaWjtq8', 'https://www.googleapis.com/books/v1/volumes/vc6kDwAAQBAJ', 496, '"BOOK"', '3319629603', '9783319629605', 1, NULL, '["Mauro Picardo","Alain Taïeb"]', '[{"name":"Mauro Picardo","key":null,"k_id":null},{"name":"Alain Taïeb","key":null,"k_id":null}]', '2023-09-26 18:39:13', '2023-09-26 18:46:30'),
@@ -713,7 +713,7 @@ INSERT INTO `books` (`id`, `title`, `subtitle`, `book_uid`, `publisher`, `publis
 	(221, 'Colour', 'Why the World Isn\'t Grey', 'rZTwDwAAQBAJ', 'Princeton University Press', '1985-07-21', 'colour', 'Discusses the colors of the natural world, the mechanism of color vision, uses of color in technology, and the psychological effects of color', 'NOT_MATURE', '0.0.1.0.preview.1', 'en', NULL, '["Science"]', 'opD2pfka6i0', 'https://www.googleapis.com/books/v1/volumes/rZTwDwAAQBAJ', 240, '"BOOK"', '0691023867', '9780691023861', 1, NULL, '["Hazel Rossotti"]', '[{"name":"Hazel Rossotti","key":"OL393313A","k_id":195}]', '2023-09-26 18:40:25', '2023-09-26 18:52:34'),
 	(222, 'God and Reason in the Middle Ages', NULL, 'UB0Tao4oikEC', 'Cambridge University Press', '2001-07-30', 'god-and-reason-in-the-middle-ages', 'Between 1100 and 1600, the emphasis on reason in the learning and intellectual life of Western Europe became more pervasive and widespread than ever before in the history of human civilization. Of crucial significance was the invention of the university around 1200, within which reason was institutionalized and where it became a deeply embedded, permanent feature of Western thought and culture. It is therefore appropriate to speak of an Age of Reason in the Middle Ages, and to view it as a forerunner and herald of the Age of Reason that was to come in the seventeenth century. The object of this study is twofold: to describe how reason was manifested in the curriculum of medieval universities, especially in the subjects of logic, natural philosophy and theology; and to explain how the Middle Ages acquired an undeserved reputation as an age of superstition, barbarism, and unreason.', 'NOT_MATURE', '4.2.4.0.preview.1', 'en', NULL, '["History"]', 'nGetVgIc8mg', 'https://www.googleapis.com/books/v1/volumes/UB0Tao4oikEC', 412, '"BOOK"', '0521003377', '9780521003377', 1, NULL, '["Edward Grant","Professor Emeritus Edward Grant"]', '[{"name":"Edward Grant","key":"OL448559A","k_id":196},{"name":"Professor Emeritus Edward Grant","key":null,"k_id":null}]', '2023-09-26 18:40:25', '2023-09-26 18:52:36');
 
--- Dumping structure for table book_explorer.categories
+-- Dumping structure for table bookolog.categories
 DROP TABLE IF EXISTS `categories`;
 CREATE TABLE IF NOT EXISTS `categories` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -730,7 +730,7 @@ CREATE TABLE IF NOT EXISTS `categories` (
   UNIQUE KEY `category_title` (`category_title`) USING HASH
 ) ENGINE=InnoDB AUTO_INCREMENT=164 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
--- Dumping data for table book_explorer.categories: ~163 rows (approximately)
+-- Dumping data for table bookolog.categories: ~163 rows (approximately)
 DELETE FROM `categories`;
 INSERT INTO `categories` (`id`, `category_title`, `description`, `background_color`, `status`, `displayed_in`, `icon`, `img_uri`, `createdAt`, `updatedAt`) VALUES
 	(1, 'Computers', 'Computers category encompasses books on various aspects of computer science, programming, software development, hardware, and technology. Explore the vast realm of computational theories, coding languages, electronics, artificial intelligence, and emerging trends shaping the digital landscape.', 17, NULL, 0, NULL, NULL, '2023-09-11 19:07:14', '2023-09-22 09:56:33'),

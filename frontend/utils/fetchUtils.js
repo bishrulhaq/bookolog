@@ -1,5 +1,5 @@
 
-const uri = process.env.APP_ENV == 'development' ? 'http://localhost:4000/api' : 'https://bookolog.com/api';
+const uri = process.env.APP_ENV === 'development' ? 'http://localhost:4000/api' : 'https://bookolog.com/api';
 
 export async function fetchBooks() {
     return fetch('http://backend:4000/api/book').then((response) => {

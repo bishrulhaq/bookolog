@@ -27,7 +27,7 @@ services:
     environment:
       MYSQL_ROOT_USER: root
       MYSQL_ROOT_PASSWORD: SJFHFIHJGH673
-      MYSQL_DATABASE: book_explorer
+      MYSQL_DATABASE: bookolog
     ports:
       - "3306:3306"
     networks:
