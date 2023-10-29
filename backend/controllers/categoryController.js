@@ -1,4 +1,3 @@
-const { Sequelize } = require('sequelize');
 const { category } = require('../models');
 
 const categoryController = {

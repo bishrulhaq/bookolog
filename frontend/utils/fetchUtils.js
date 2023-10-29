@@ -105,7 +105,7 @@ export async function fetchBooksByGenre(searchByGenre) {
 
 export async function fetchHomeScreenGenres() {
 
-    return fetch(`${uri}/category`, { cache: 'force-cache' }).then((response) => {
+    return fetch(`${uri}/category`).then((response) => {
         if (!response.ok) {
             throw new Error('Network response was not ok');
         }

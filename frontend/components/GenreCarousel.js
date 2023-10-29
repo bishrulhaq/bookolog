@@ -14,7 +14,6 @@ const GenreCarousel = () => {
   const nextButtonRef = useRef(null);
   const [isLoading, setIsLoading] = useState(true);
 
-
   useEffect(() => {
     const slidesContainer = slidesContainerRef.current;
     const slide = slideRef.current;
@@ -56,7 +55,7 @@ const GenreCarousel = () => {
         prevButton.removeEventListener("click", handlePrevClick);
       };
     }
-  }, [isLoading]);
+  }, []);
 
 
   return (
@@ -84,12 +83,12 @@ const GenreCarousel = () => {
         </div>
       </div>) :
         data.length !== 0 && (
-          <div className="mx-auto px-4 py-4 md:px-8 transition-all duration-500 ease-linear">
+          <div className="mx-auto px-4 py-6 md:px-8 transition-all duration-500 ease-linear">
             <div className="relative">
               <div ref={slidesContainerRef} className="slides-container flex snap-x snap-mandatory overflow-hidden overflow-x-auto space-x-2 rounded scroll-smooth">
                 {data.map((item, index) => (
                   <div ref={slideRef} className="slide flex-shrink-0 snap-center rounded overflow-hidden" key={index}>
-                    <Link href={'genre/'+ sanitizedUri(item.category_title)}>
+                    <Link href={'genre/' + sanitizedUri(item.category_title)}>
                       <div className={`max-w-sm inline-flex  items-center px-3 py-2 text-sm font-medium text-center text-white rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800 ${BACKGROUND_GREDIENT[item?.background_color ?? 0]}`}>
                         {item?.category_title}
 
