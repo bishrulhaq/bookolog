@@ -1,7 +1,8 @@
 const { Sequelize } = require('sequelize');
 const { book, author, category } = require('../models');
 const axios = require('axios');
-const { sanitizedUri } = require('../helpers/utils');
+const { logger, sanitizedUri, encrypt, decrypt } = require('../helpers/utils');
+
 
 const bookController = {
   getAll: async (req, res) => {
@@ -16,12 +17,26 @@ const bookController = {
 
   getById: async (req, res) => {
     const { id } = req.params;
+    const decryptedId = decrypt(id);
+
+    let response = await book.findOne({ where: { id: decryptedId } });
+
+    if (!response) {
+      const getBook = await axios.get(`https://www.googleapis.com/books/v1/volumes/${decryptedId}?key=${process.env.GOOGLE_BOOKS_API}`);
+
+      const isbn = getBook.data?.volumeInfo?.industryIdentifiers?.find(
+        (identifier) => identifier?.type === 'ISBN_13' ||
+          identifier?.type === 'ISBN_10')?.identifier;
+
+      response = isbn ? await addBook(getBook.data) : null;
+    }
+
     try {
-      const singleBook = await book.findByPk(id); // Use the Book model to find a book by ID
-      if (!singleBook) {
+
+      if (!response) {
         res.status(404).json({ error: 'Book not found' });
       } else {
-        res.json(singleBook);
+        res.json(response);
       }
     } catch (error) {
       console.error(error);
@@ -31,6 +46,7 @@ const bookController = {
 
   searchByTitle: async (req, res) => {
     const { title } = req.query;
+
     try {
 
       // const books = await book.findAll({
@@ -42,23 +58,11 @@ const bookController = {
       // },);
       // res.json(books);
 
-      const response = await axios.get(`https://www.googleapis.com/books/v1/volumes?q=${title}&key=${process.env.GOOGLE_BOOKS_API}&maxResults=4`);
-      const returnBooks = [];
 
-      for (const item of response.data.items || []) {
-        const isbn = item?.volumeInfo?.industryIdentifiers?.find((identifier) => identifier?.type === 'ISBN_13' || identifier?.type === 'ISBN_10')?.identifier;
-        if (isbn) {
-          const insertedBook = await addBooks(item)
-          if (insertedBook) {
-            returnBooks.push(insertedBook);
-          }
-        }
-      }
+      const returnBooks = await searchBooksOnGoogleAPI(title);
       res.json(returnBooks);
-
     } catch (error) {
-      console.error(error);
-      res.status(500).json({ error: 'An error occurred' });
+      handleError(res, error);
     }
   },
 
@@ -141,7 +145,7 @@ const bookController = {
   searchByISBN: async (req, res) => {
     const { isbn } = req.query;
     try {
-      
+
       // const books = await book.findAll({
       //   where: {
       //     [Sequelize.Op.or]: [
@@ -153,24 +157,10 @@ const bookController = {
       //   attributes: ['id', 'title', 'subtitle', 'description', 'slug'],
       // });
 
-      const response = await axios.get(`https://www.googleapis.com/books/v1/volumes?q=isbn:${isbn}&key=${process.env.GOOGLE_BOOKS_API}&maxResults=4`);
-      const returnBooks = [];
-
-      for (const item of response.data.items || []) {
-        const isbn = item?.volumeInfo?.industryIdentifiers?.find((identifier) => identifier?.type === 'ISBN_13' || identifier?.type === 'ISBN_10')?.identifier;
-        if (isbn) {
-          const insertedBook = await addBooks(item)
-          if (insertedBook) {
-            returnBooks.push(insertedBook);
-          }
-        }
-      }
-
+      const returnBooks = await searchBooksOnGoogleAPI(`isbn:${isbn}`);
       res.json(returnBooks);
-
     } catch (error) {
-      console.error(error);
-      res.status(500).json({ error: 'An error occurred' });
+      handleError(res, error);
     }
   },
 
@@ -201,53 +191,75 @@ const bookController = {
 };
 
 
-async function addBooks(item) {
+async function addBook(item) {
+  if (!item || !item.id) {
+    return null;
+  }
+
   const data = {
-    title: item?.volumeInfo?.title || null,
-    subtitle: item?.volumeInfo?.subtitle || null,
-    book_uid: item?.id || null,
-    publisher: item?.volumeInfo?.publisher || null,
-    published_date: item?.volumeInfo?.publishedDate || null,
-    description: item?.volumeInfo?.description || null,
-    maturityRating: item?.volumeInfo?.maturityRating || null,
-    contentVersion: item?.volumeInfo?.contentVersion || null,
+    title: item.volumeInfo?.title || null,
+    subtitle: item.volumeInfo?.subtitle || null,
+    book_uid: item.id,
+    slug: sanitizedUri(item.volumeInfo?.title || null),
+    publisher: item.volumeInfo?.publisher || null,
+    published_date: item.volumeInfo?.publishedDate || null,
+    description: item.volumeInfo?.description || null,
+    maturityRating: item.volumeInfo?.maturityRating || null,
+    contentVersion: item.volumeInfo?.contentVersion || null,
     language: item.volumeInfo?.language || null,
-    search_info: item?.searchInfo || null,
-    categories: item?.volumeInfo?.categories || null,
-    e_tag: item?.etag || null,
-    google_uri: item?.selfLink || null,
-    page_count: item?.volumeInfo?.pageCount || null,
-    print_type: item?.volumeInfo?.printType || null,
-    isbn_10: item?.volumeInfo?.industryIdentifiers?.find((identifier) => identifier?.type === 'ISBN_10')?.identifier || null,
-    isbn_13: item?.volumeInfo?.industryIdentifiers?.find((identifier) => identifier?.type === 'ISBN_13')?.identifier || null,
-    publish_country: item?.volumeInfo?.country || null,
-    book_authors: item?.volumeInfo?.authors || null,
-    slug: sanitizedUri(item?.volumeInfo?.title || null),
+    search_info: item.searchInfo || null,
+    categories: item.volumeInfo?.categories || null,
+    e_tag: item.etag || null,
+    google_uri: item.selfLink || null,
+    page_count: item.volumeInfo?.pageCount || null,
+    print_type: item.volumeInfo?.printType || null,
+    isbn_10: (item.volumeInfo?.industryIdentifiers || []).find(identifier => identifier.type === 'ISBN_10')?.identifier || null,
+    isbn_13: (item.volumeInfo?.industryIdentifiers || []).find(identifier => identifier.type === 'ISBN_13')?.identifier || null,
+    publish_country: item.volumeInfo?.country || null,
+    book_authors: item.volumeInfo?.authors || null,
     author_ids: null,
   };
 
+  try {
+    const existingBook = await book.findOne({ where: { book_uid: data.book_uid } });
 
-  if (data.book_uid) {
-    try {
-      const existingBook = await book.findOne({ where: { book_uid: data.book_uid } });
+    if (!existingBook) {
+      const createdBook = await book.create(data);
 
-      if (!existingBook) {
-        const createdBook = await book.create(data);
-        if (data.categories) {
-          const uniqueCategories = [...new Set(data.categories)];
-          for (const categoryName of uniqueCategories) {
-            await insertCategoryIfNotExists(categoryName);
+      if (data.categories) {
+        const uniqueCategories = [...new Set(data.categories)];
+        const allCategories = [];
+
+        uniqueCategories.forEach(categoryName => {
+          const splitCategories = categoryName.split(' / ');
+          if (splitCategories.length === 1) {
+            allCategories.push(categoryName);
+          } else {
+            allCategories.push(...splitCategories);
           }
-        }
-        return createdBook;
-      } else {
-        return existingBook;
+        });
+        
+        allCategories.forEach(categoryName => insertCategoryIfNotExists(categoryName));
       }
-    } catch (error) {
-      return null;
+
+      const book_isbn = createdBook?.isbn_13 || createdBook?.isbn_10;
+      const authorInfo = await fetchAuthorInfoByISBN(book_isbn, createdBook.book_authors, createdBook);
+
+      if (authorInfo) {
+        console.log(`Author information saved for book with ISBN ${book_isbn}`);
+      } else {
+        console.log(`No author information found for book with ISBN ${book_isbn}`);
+      }
+
+      return createdBook;
+    } else {
+      return existingBook;
     }
+  } catch (error) {
+    return null;
   }
 }
+
 
 async function insertCategoryIfNotExists(categoryTitle) {
   try {
@@ -257,6 +269,163 @@ async function insertCategoryIfNotExists(categoryTitle) {
     });
   } catch (error) {
     console.error('Error inserting category:', error);
+  }
+}
+
+
+async function fetchAuthorInfoByISBN(isbnCode, bookAuthorsArray, book) {
+  try {
+    const bookInfo = await getBookInfoFromOpenLibrary(isbnCode);
+    if (!bookInfo) {
+      return null;
+    }
+
+    const authorData = createAuthorData(bookAuthorsArray, bookInfo.authors);
+
+    book.author_ids = authorData;
+    await book.save();
+
+    if (book.book_uid && book.author_ids) {
+      const alteredAuthors = await updateAuthors(book.author_ids);
+      await book.update({ author_ids: alteredAuthors });
+      await book.update({ status: 1 });
+    }
+
+    return authorData;
+  } catch (error) {
+    console.error('Error fetching author information:', error);
+    return null;
+  }
+}
+
+async function getBookInfoFromOpenLibrary(isbnCode) {
+  try {
+    const response = await axios.get(`https://openlibrary.org/api/books?bibkeys=ISBN:${isbnCode}&jscmd=data&format=json`);
+    return response.data[`ISBN:${isbnCode}`];
+  } catch (error) {
+    return null;
+  }
+}
+
+function createAuthorData(bookAuthorsArray, authors) {
+  const authorData = [];
+
+  for (const author of authors) {
+    const authorKey = author.url.split('/').pop();
+    const authorName = bookAuthorsArray.includes(author.name) ? author.name : null;
+
+    if (authorName) {
+      authorData.push({
+        name: authorName,
+        key: authorKey || null,
+        k_id: null,
+      });
+    }
+  }
+
+  bookAuthorsArray.forEach((authorName) => {
+    if (!authorData.some((author) => author.name === authorName)) {
+      authorData.push({
+        name: authorName,
+        key: null,
+        k_id: null,
+      });
+    }
+  });
+
+  return authorData;
+}
+
+async function updateAuthors(author_ids) {
+  const alteredAuthors = [];
+
+  for (const author of author_ids) {
+    if (author.key !== null) {
+      const authorDetails = await getAuthorDetailsFromOpenLibrary(author.key);
+
+      if (authorDetails?.data && authorDetails?.data?.name) {
+        const addedAuthor = await insertAuthorIfNotExists(authorDetails.data, author.key, book);
+        alteredAuthors.push({
+          name: addedAuthor?.name,
+          key: addedAuthor?.author_uid,
+          k_id: addedAuthor?.id,
+        });
+      } else {
+        alteredAuthors.push({
+          name: author.name,
+          key: null,
+          k_id: null,
+        });
+      }
+    } else {
+      alteredAuthors.push({
+        name: author.name,
+        key: null,
+        k_id: null,
+      });
+    }
+  }
+
+  return alteredAuthors;
+}
+
+async function getAuthorDetailsFromOpenLibrary(authorKey) {
+  try {
+    return await axios.get(`https://openlibrary.org/author/${authorKey}.json`);
+  } catch (error) {
+    return null;
+  }
+}
+
+async function insertAuthorIfNotExists(authorInfo, authorKey, currentBook) {
+  try {
+    const [authorRecord, created] = await author.findOrCreate({
+      where: { author_uid: authorKey },
+      defaults: {
+        name: authorInfo?.name,
+        alternate_names: authorInfo?.alternate_names ? JSON.stringify(authorInfo?.alternate_names) : null, // You can fetch alternate names from the API if available
+        birth_year: authorInfo?.birth_date ?? null,
+        death_year: authorInfo?.death_date ?? null,
+        biography: authorInfo?.bio?.value ?? null,
+        slug: sanitizedUri(authorInfo?.name)
+      },
+    });
+
+    if (created) {
+      logger.info(`Author "${authorInfo?.name}" inserted.`);
+      await currentBook.addAuthor(authorRecord);
+
+    } else {
+      logger.info(`Author "${authorInfo.name}" already exists.`);
+      await currentBook.addAuthor(authorRecord);
+    }
+
+    return authorRecord;
+  } catch (error) {
+    logger.error('Error inserting author:', error);
+  }
+}
+
+async function searchBooksOnGoogleAPI(query) {
+  try {
+    const response = await axios.get(`https://www.googleapis.com/books/v1/volumes?q=${query}&key=${process.env.GOOGLE_BOOKS_API}&maxResults=10`);
+    const returnBooks = [];
+
+    for (const item of response.data.items || []) {
+      const isbn = item?.volumeInfo?.industryIdentifiers?.find(identifier => identifier?.type === 'ISBN_13' || identifier?.type === 'ISBN_10')?.identifier;
+      if (isbn) {
+        returnBooks.push({
+          title: item?.volumeInfo?.title || null,
+          subtitle: item?.volumeInfo?.subtitle || null,
+          id: encrypt(item?.id),
+          slug: sanitizedUri(item?.volumeInfo?.title || null),
+        });
+      }
+    }
+
+    return returnBooks;
+  } catch (error) {
+    return null;
   }
 }
 

@@ -2,6 +2,7 @@
 import { useRouter } from 'next/navigation';
 import React, { useState, useEffect, useRef } from "react"
 import Link from 'next/link';
+import useDebounce from '@/components/useDebounce'
 import { fetchBooksByTitle, fetchBooksByAuthor, fetchBooksByISBN, sanitizedUri, truncateText, navigateToBook } from '@/utils';
 
 const SearchBar = () => {
@@ -17,13 +18,16 @@ const SearchBar = () => {
   const [searchResults, setSearchResults] = useState([]); // State to store search results
   const [isLoading, setIsLoading] = useState(false);
 
+  const debouncedSearch = useDebounce(query, 300)
+
+
   const handleDropdownToggle = () => {
     setIsDropdownOpen(!isDropdownOpen);
   };
 
   const handleDropdownOptionClick = (option) => {
     setSelectedOption(option);
-    setIsDropdownOpen(false); // Close the dropdown when an option is clicked
+    setIsDropdownOpen(false);
   };
 
   const handleSearchBarClick = (e) => {
@@ -39,12 +43,30 @@ const SearchBar = () => {
       }
     };
 
+
     window.addEventListener('click', handleClickOutside);
 
     return () => {
       window.removeEventListener('click', handleClickOutside);
     };
   }, []);
+
+
+  useEffect(() => {
+    if (debouncedSearch) {
+      console.log(debouncedSearch);
+      if (debouncedSearch.length > 0 && !debouncedSearch.startsWith(' ')) {
+        handleSearch();
+      } else {
+        setSearchResults([]);
+        setIsSearchDropdownOpen(false);
+      }
+    } else {
+      setSearchResults([]);
+      setIsSearchDropdownOpen(false);
+    }
+  }, [debouncedSearch])
+
 
   const handleSearch = async () => {
 
@@ -54,19 +76,21 @@ const SearchBar = () => {
       if (selectedOption === 'Title' && trimmedQuery.length >= 2) {
         const data = await fetchBooksByTitle(trimmedQuery);
         setSearchResults(data);
+
         setIsSearchDropdownOpen(true)
       } else if (selectedOption === 'ISBN' && trimmedQuery.length >= 2) {
         const data = await fetchBooksByISBN(trimmedQuery);
         setIsSearchDropdownOpen(true)
+
         setSearchResults(data);
       } else if (selectedOption === 'Author' && trimmedQuery.length >= 2) {
         const data = await fetchBooksByAuthor(trimmedQuery);
         setSearchResults(data);
+
         setIsSearchDropdownOpen(true)
       } else {
         setIsSearchDropdownOpen(false);
       }
-
 
     } catch (error) {
       console.error("Error:", error);
@@ -101,22 +125,9 @@ const SearchBar = () => {
                 type="text"
                 placeholder={`Search by ${selectedOption}`}
                 value={query}
-                onKeyUp={(event) => {
-                  const inputValue = event.currentTarget.value;
-                  if (inputValue.length >= 2 && !inputValue.startsWith(' ')) {
-                    setQuery(inputValue);
-                    handleSearch();
-                  } else {
-                    setQuery(inputValue);
-                    setSearchResults([]);
-                    setIsSearchDropdownOpen(false);
-                  }
-                }}
                 onChange={(event) => {
-                  const inputValue = event.currentTarget.value;
-                  setQuery(inputValue);
+                  setQuery(event.target.value);
                 }}
-                
                 onClick={handleSearchBarClick}
                 ref={searchBarRef}
                 className="text-primary-500 placeholder-primary-200 py-2 px-3 w-96  max-w-lg flex rounded bg-primary-400 focus:outline-none focus:bg-gray-900"
