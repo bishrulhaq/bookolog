@@ -18,7 +18,7 @@ const SearchBar = () => {
   const [searchResults, setSearchResults] = useState([]); // State to store search results
   const [isLoading, setIsLoading] = useState(false);
 
-  const debouncedSearch = useDebounce(query, 500)
+  const debouncedSearch = useDebounce(query, 300)
 
 
   const handleDropdownToggle = () => {

@@ -14,23 +14,24 @@ const GenreCarousel = () => {
   const nextButtonRef = useRef(null);
   const [isLoading, setIsLoading] = useState(true);
 
+  const fetchData = async () => {
+
+    try {
+      const data = await fetchHomeScreenGenres();
+      setData(data);
+      setIsLoading(false);
+      
+    } catch (error) {
+      console.error('Error:', error);
+      setIsLoading(false);
+    }
+  }
+
   useEffect(() => {
     const slidesContainer = slidesContainerRef.current;
     const slide = slideRef.current;
     const prevButton = prevButtonRef.current;
     const nextButton = nextButtonRef.current;
-
-    const fetchData = async () => {
-
-      try {
-        const data = await fetchHomeScreenGenres();
-        setIsLoading(false);
-        setData(data);
-      } catch (error) {
-        console.error('Error:', error);
-        setIsLoading(false);
-      }
-    }
 
     fetchData();
 
@@ -55,7 +56,7 @@ const GenreCarousel = () => {
         prevButton.removeEventListener("click", handlePrevClick);
       };
     }
-  }, []);
+  }, [isLoading]);
 
 
   return (
