@@ -70,9 +70,9 @@ export default async function App({ searchParams }) {
           <p className="bg-blue-100 text-blue-800 text-lg font-medium inline-flex items-center px-2.5 py-0.5 rounded-md dark:bg-gray-700 dark:text-blue-400 mb-2">
             👐🏼
           </p>
-          <h1 className="text-gray-900 dark:text-white text-3xl md:text-5xl font-extrabold py-2">Get connected,</h1>
+          <h1 className="text-gray-900 dark:text-white text-3xl md:text-5xl font-extrabold py-2">Yo!,</h1>
           <h2 className="text-gray-900 dark:text-white text-2xl md:text-4xl font-bold py-2">Explore, and get connected with fellow book readers!</h2>
-          <p className="text-lg font-normal text-gray-500 dark:text-gray-400 mb-6">Static websites are now used to bootstrap lots of websites and are becoming the basis for a variety of tools that even influence both web designers and developers.</p>
+          <p className="text-lg font-normal text-gray-500 dark:text-gray-400 mb-6">A platform dedicated for the bookaholics.</p>
           <a href="#" className="inline-flex justify-center items-center py-2.5 px-5 text-base font-medium text-center text-white rounded-lg bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 dark:focus:ring-blue-900">
             Sign up
             <svg className="w-3.5 h-3.5 ml-2" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 10">

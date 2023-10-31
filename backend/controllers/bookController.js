@@ -7,7 +7,7 @@ const { logger, sanitizedUri, encrypt, decrypt } = require('../helpers/utils');
 const bookController = {
   getAll: async (req, res) => {
     try {
-      const books = await book.findAll(); // Use the Book model to retrieve all books
+      const books = await book.findAll(); 
       res.json(books);
     } catch (error) {
       console.error(error);
