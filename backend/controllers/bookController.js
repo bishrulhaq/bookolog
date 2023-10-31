@@ -193,7 +193,7 @@ const bookController = {
 
 async function addBook(item) {
   if (!item || !item.id) {
-    return null;
+    return [];
   }
 
   const data = {
@@ -238,7 +238,7 @@ async function addBook(item) {
             allCategories.push(...splitCategories);
           }
         });
-        
+
         allCategories.forEach(categoryName => insertCategoryIfNotExists(categoryName));
       }
 
@@ -256,7 +256,7 @@ async function addBook(item) {
       return existingBook;
     }
   } catch (error) {
-    return null;
+    return [];
   }
 }
 
@@ -425,7 +425,7 @@ async function searchBooksOnGoogleAPI(query) {
 
     return returnBooks;
   } catch (error) {
-    return null;
+    return [];
   }
 }
 
