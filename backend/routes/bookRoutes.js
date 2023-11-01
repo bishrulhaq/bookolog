@@ -5,7 +5,7 @@ const ipWhitelistMiddleware = require('../middleware/ipWhitelistMiddleware');
 
 // Define a route to get all books
 // Example : http://localhost:4000/api/book
-router.get('/', ipWhitelistMiddleware,bookController.getAll);
+router.get('/', ipWhitelistMiddleware, bookController.getAll);
 
 // Search By Title
 // Example : http://localhost:4000/api/book/title?search-title=YourTitleHere
@@ -37,6 +37,12 @@ router.get('/isbn', bookController.searchByISBN);
 
 // Define a route to get all books
 // Example : http://localhost:4000/api/book/id?id
-router.get('/:id', ipWhitelistMiddleware,bookController.getById);
+router.get('/:id', ipWhitelistMiddleware, bookController.getById);
+
+// Define a route to increase views
+// Example : http://localhost:4000/api/book/increment-view
+router.post('/increment-view', ipWhitelistMiddleware, bookController.incrementView);
+
+
 
 module.exports = router;

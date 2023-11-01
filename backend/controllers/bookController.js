@@ -7,8 +7,27 @@ const { logger, sanitizedUri, encrypt, decrypt } = require('../helpers/utils');
 const bookController = {
   getAll: async (req, res) => {
     try {
-      const books = await book.findAll(); 
+      const books = await book.findAll();
       res.json(books);
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ error: 'An error occurred' });
+    }
+  },
+
+  incrementView: async (req, res) => {
+    try {
+
+      const { id } = req.body;
+      const bookInstance = await book.findOne({ where: { id: parseInt(id) } });
+
+      if (!bookInstance) {
+        return res.status(404).json({ error: 'Book not found' });
+      }
+
+      await bookInstance.increment('views');
+
+      res.json({ message: 'View count incremented' });
     } catch (error) {
       console.error(error);
       res.status(500).json({ error: 'An error occurred' });
@@ -18,26 +37,31 @@ const bookController = {
   getById: async (req, res) => {
     const { id } = req.params;
     const decryptedId = decrypt(id);
-
-    let response = await book.findOne({ where: { id: decryptedId } });
-
-    if (!response) {
-      const getBook = await axios.get(`https://www.googleapis.com/books/v1/volumes/${decryptedId}?key=${process.env.GOOGLE_BOOKS_API}`);
-
-      const isbn = getBook.data?.volumeInfo?.industryIdentifiers?.find(
-        (identifier) => identifier?.type === 'ISBN_13' ||
-          identifier?.type === 'ISBN_10')?.identifier;
-
-      response = isbn ? await addBook(getBook.data) : null;
-    }
-
     try {
 
+      let response = await book.findOne({ where: { book_uid: decryptedId } });
+
       if (!response) {
-        res.status(404).json({ error: 'Book not found' });
+        const getBook = await axios.get(`https://www.googleapis.com/books/v1/volumes/${decryptedId}?key=${process.env.GOOGLE_BOOKS_API}`);
+
+        const isbn = getBook.data?.volumeInfo?.industryIdentifiers?.find(
+          (identifier) => identifier?.type === 'ISBN_13' ||
+            identifier?.type === 'ISBN_10')?.identifier;
+
+        if (isbn) {
+          await addBook(getBook.data)
+          let response = await book.findOne({ where: { book_uid: decryptedId } });
+          await response.increment('views');
+          res.json(response);
+        } else {
+          res.json([]);
+        }
+
       } else {
+        await response.increment('views');
         res.json(response);
       }
+
     } catch (error) {
       console.error(error);
       res.status(500).json({ error: 'An error occurred' });
@@ -221,40 +245,37 @@ async function addBook(item) {
   };
 
   try {
-    const existingBook = await book.findOne({ where: { book_uid: data.book_uid } });
 
-    if (!existingBook) {
-      const createdBook = await book.create(data);
+    const createdBook = await book.create(data);
+    await createdBook.increment('views');
 
-      if (data.categories) {
-        const uniqueCategories = [...new Set(data.categories)];
-        const allCategories = [];
+    if (data.categories) {
+      const uniqueCategories = [...new Set(data.categories)];
+      const allCategories = [];
 
-        uniqueCategories.forEach(categoryName => {
-          const splitCategories = categoryName.split(' / ');
-          if (splitCategories.length === 1) {
-            allCategories.push(categoryName);
-          } else {
-            allCategories.push(...splitCategories);
-          }
-        });
+      uniqueCategories.forEach(categoryName => {
+        const splitCategories = categoryName.split(' / ');
+        if (splitCategories.length === 1) {
+          allCategories.push(categoryName);
+        } else {
+          allCategories.push(...splitCategories);
+        }
+      });
 
-        allCategories.forEach(categoryName => insertCategoryIfNotExists(categoryName));
-      }
-
-      const book_isbn = createdBook?.isbn_13 || createdBook?.isbn_10;
-      const authorInfo = await fetchAuthorInfoByISBN(book_isbn, createdBook.book_authors, createdBook);
-
-      if (authorInfo) {
-        console.log(`Author information saved for book with ISBN ${book_isbn}`);
-      } else {
-        console.log(`No author information found for book with ISBN ${book_isbn}`);
-      }
-
-      return createdBook;
-    } else {
-      return existingBook;
+      allCategories.forEach(categoryName => insertCategoryIfNotExists(categoryName));
     }
+
+    const book_isbn = createdBook?.isbn_13 || createdBook?.isbn_10;
+    const authorInfo = await fetchAuthorInfoByISBN(book_isbn, createdBook.book_authors, createdBook);
+
+    if (authorInfo) {
+      console.log(`Author information saved for book with ISBN ${book_isbn}`);
+    } else {
+      console.log(`No author information found for book with ISBN ${book_isbn}`);
+    }
+
+    return createdBook;
+
   } catch (error) {
     return [];
   }

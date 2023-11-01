@@ -17,6 +17,25 @@ export async function fetchBooks() {
         });
 }
 
+export async function incrementView(id) {
+    return fetch('http://backend:4000/api/book/increment-view', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ id }),
+    }).then((response) => {
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
+        }
+        return response.json();
+    })
+        .then((data) => {
+            return data;
+        })
+        .catch((error) => {
+            console.error('Error:', error);
+            throw error;
+        });
+}
 
 export async function fetchBooksByTitle(searchByTitle) {
     return fetch(`${uri}/book/search-title?title=${searchByTitle}`).then((response) => {
@@ -33,7 +52,6 @@ export async function fetchBooksByTitle(searchByTitle) {
             throw error;
         });
 }
-
 
 export async function fetchAuthorById(getById) {
     return fetch(`${uri}/author/${getById}`).then((response) => {
@@ -68,7 +86,6 @@ export async function fetchBooksByISBN(searchByISBN) {
         });
 }
 
-
 export async function fetchBooksByAuthor(searchByAuthor) {
     return fetch(`${uri}/book/search-authors?author=${searchByAuthor}`).then((response) => {
         if (!response.ok) {
@@ -85,7 +102,6 @@ export async function fetchBooksByAuthor(searchByAuthor) {
         });
 }
 
-
 export async function fetchBooksByGenre(searchByGenre) {
     return fetch(`${uri}/book/search-category?category=${searchByGenre}`).then((response) => {
         if (!response.ok) {
@@ -101,7 +117,6 @@ export async function fetchBooksByGenre(searchByGenre) {
             throw error;
         });
 }
-
 
 export async function fetchHomeScreenGenres() {
 
@@ -138,7 +153,6 @@ export async function fetchAllGenres() {
             throw error;
         });
 }
-
 
 
 export async function fetchBookById(getByd) {

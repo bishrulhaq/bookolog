@@ -88,6 +88,14 @@ const book = sequelize.define('book', {
   status:{
     type: DataTypes.TINYINT, 
     defaultValue: 0,
+  },
+  cover_id:{
+    type: DataTypes.INTEGER,
+    defaultValue: null,
+  },
+  views:{
+    type: DataTypes.BIGINT,
+    defaultValue: 0,
   }
 });
 

@@ -332,3 +332,11 @@ body {
   border-radius: 10px;
   background: #6d6d6d; 
 }
+
+hr.hr-fade {
+  border: 0;
+  height: 1px;
+  margin-top: 20px;
+  margin-bottom: 5px;
+  background-image: linear-gradient(to right, rgba(230, 175, 26, 0), rgba(246, 207, 15, 0.75), rgba(193, 163, 12, 0));
+}

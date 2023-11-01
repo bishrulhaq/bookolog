@@ -15,8 +15,6 @@
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 
--- Dumping database structure for bookolog
-DROP DATABASE IF EXISTS `bookolog`;
 CREATE DATABASE IF NOT EXISTS `bookolog` /*!40100 DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci */;
 USE `bookolog`;
 
@@ -239,7 +237,17 @@ INSERT INTO `authors` (`id`, `name`, `alternate_names`, `author_uid`, `slug`, `b
 	(195, 'Hazel Rossotti', NULL, 'OL393313A', 'hazel-rossotti', NULL, NULL, NULL, NULL, '2023-09-26 18:52:34', '2023-09-26 18:52:34'),
 	(196, 'Edward Grant', NULL, 'OL448559A', 'edward-grant', '1926', NULL, NULL, NULL, '2023-09-26 18:52:36', '2023-09-26 18:52:36');
 
--- Dumping structure for table bookolog.books
+DROP TABLE IF EXISTS `bookCoverImages`;
+CREATE TABLE IF NOT EXISTS `bookCoverImages` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `cover_uri_primary` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL CHECK (json_valid(`cover_uri_primary`)),
+  `cover_uri_alternative` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL CHECK (json_valid(`cover_uri_alternative`)),
+  `createdAt` datetime NOT NULL,
+  `updatedAt` datetime NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+
 DROP TABLE IF EXISTS `books`;
 CREATE TABLE IF NOT EXISTS `books` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -248,7 +256,6 @@ CREATE TABLE IF NOT EXISTS `books` (
   `book_uid` varchar(100) DEFAULT NULL,
   `publisher` text DEFAULT NULL,
   `published_date` text DEFAULT NULL,
-  `slug` varchar(255) NOT NULL,
   `description` text DEFAULT NULL,
   `maturityRating` varchar(255) DEFAULT NULL,
   `contentVersion` varchar(255) DEFAULT NULL,
@@ -261,15 +268,19 @@ CREATE TABLE IF NOT EXISTS `books` (
   `print_type` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL CHECK (json_valid(`print_type`)),
   `isbn_10` varchar(255) DEFAULT NULL,
   `isbn_13` varchar(255) DEFAULT NULL,
-  `status` tinyint(4) NOT NULL DEFAULT 0,
   `publish_country` text DEFAULT NULL,
   `book_authors` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL CHECK (json_valid(`book_authors`)),
   `author_ids` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL CHECK (json_valid(`author_ids`)),
+  `slug` char(255) NOT NULL,
+  `status` tinyint(4) DEFAULT 0,
+  `cover_id` int(11) DEFAULT NULL,
   `createdAt` datetime NOT NULL,
   `updatedAt` datetime NOT NULL,
   PRIMARY KEY (`id`),
-  UNIQUE KEY `book_uid` (`book_uid`)
-) ENGINE=InnoDB AUTO_INCREMENT=223 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+  UNIQUE KEY `book_uid` (`book_uid`),
+  KEY `cover_id` (`cover_id`),
+  CONSTRAINT `books_ibfk_1` FOREIGN KEY (`cover_id`) REFERENCES `bookCoverImages` (`id`) ON DELETE NO ACTION ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- Dumping data for table bookolog.books: ~197 rows (approximately)
 DELETE FROM `books`;
