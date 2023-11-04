@@ -1,4 +1,5 @@
 const { Sequelize } = require('sequelize');
+const sequelize = require('../config/db');
 const { book, author, category } = require('../models');
 const axios = require('axios');
 const { logger, sanitizedUri, encrypt, decrypt } = require('../helpers/utils');
@@ -14,6 +15,36 @@ const bookController = {
       res.status(500).json({ error: 'An error occurred' });
     }
   },
+
+  featuredBooks: async (req, res) => {
+    try {
+      const featured = await book.findAll({
+        where: { is_featured: true },
+        order: [['updatedAt', 'DESC']],
+        limit: 8,
+      });
+
+      res.json(featured);
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ error: 'An error occurred' });
+    }
+  },
+
+  trendingBooks: async (req, res) => {
+    try {
+      const trending = await book.findAll({
+        order: [['views', 'DESC']],
+        limit: 8,
+      });
+
+      res.json(trending);
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ error: 'An error occurred' });
+    }
+  },
+
 
   incrementView: async (req, res) => {
     try {
@@ -36,11 +67,11 @@ const bookController = {
 
   getById: async (req, res) => {
     const { id } = req.params;
-    const decryptedId = decrypt(id);
+
     try {
 
-      let response = await book.findOne({ where: { book_uid: decryptedId } });
-
+      let response = await book.findOne({ where: { uuid: id } });
+      const decryptedId = decrypt(id);
       if (!response) {
         const getBook = await axios.get(`https://www.googleapis.com/books/v1/volumes/${decryptedId}?key=${process.env.GOOGLE_BOOKS_API}`);
 
@@ -224,6 +255,7 @@ async function addBook(item) {
     title: item.volumeInfo?.title || null,
     subtitle: item.volumeInfo?.subtitle || null,
     book_uid: item.id,
+    uuid: encrypt(item.id),
     slug: sanitizedUri(item.volumeInfo?.title || null),
     publisher: item.volumeInfo?.publisher || null,
     published_date: item.volumeInfo?.publishedDate || null,
@@ -283,13 +315,22 @@ async function addBook(item) {
 
 
 async function insertCategoryIfNotExists(categoryTitle) {
+  const t = await sequelize.transaction();
+
   try {
-    await category.findOrCreate({
-      where: { category_title: categoryTitle },
-      defaults: { background_color: Math.floor(Math.random() * 24) }
-    });
+    const existingCategory = await category.findOne({ where: { category_title: categoryTitle }, transaction: t });
+
+    if (!existingCategory) {
+      await category.create({
+        category_title: categoryTitle,
+        background_color: Math.floor(Math.random() * 24),
+      }, { transaction: t });
+    }
+
+    await t.commit();
   } catch (error) {
     console.error('Error inserting category:', error);
+    await t.rollback();
   }
 }
 
@@ -307,7 +348,7 @@ async function fetchAuthorInfoByISBN(isbnCode, bookAuthorsArray, book) {
     await book.save();
 
     if (book.book_uid && book.author_ids) {
-      const alteredAuthors = await updateAuthors(book.author_ids);
+      const alteredAuthors = await updateAuthors(book.author_ids, book);
       await book.update({ author_ids: alteredAuthors });
       await book.update({ status: 1 });
     }
@@ -332,7 +373,7 @@ function createAuthorData(bookAuthorsArray, authors) {
   const authorData = [];
 
   for (const author of authors) {
-    const authorKey = author.url.split('/').pop();
+    const authorKey = author.url.split('/')[author.url.split('/').length - 2];
     const authorName = bookAuthorsArray.includes(author.name) ? author.name : null;
 
     if (authorName) {
@@ -357,7 +398,7 @@ function createAuthorData(bookAuthorsArray, authors) {
   return authorData;
 }
 
-async function updateAuthors(author_ids) {
+async function updateAuthors(author_ids, book) {
   const alteredAuthors = [];
 
   for (const author of author_ids) {

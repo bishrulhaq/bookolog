@@ -3,7 +3,7 @@ const sequelize = require('../config/db');
 
 const category = sequelize.define('category', {
   category_title: {
-    type: DataTypes.TEXT,
+    type: DataTypes.STRING(100),
     unique: true,
   },
   description: {
@@ -30,6 +30,13 @@ const category = sequelize.define('category', {
     type: DataTypes.STRING(255),
     defaultValue: null,
   },
+}, {
+  hooks: {
+    beforeCreate: function (category) {
+      category.category_title = category.category_title.toLowerCase();
+      return category;
+    }
+  }
 });
 
 module.exports = category;

@@ -11,6 +11,14 @@ router.get('/', ipWhitelistMiddleware, bookController.getAll);
 // Example : http://localhost:4000/api/book/title?search-title=YourTitleHere
 router.get('/search-title', ipWhitelistMiddleware, bookController.searchByTitle);
 
+// Get Featured Books
+// Example : http://localhost:4000/api/book/featured-books
+router.get('/featured-books', ipWhitelistMiddleware, bookController.featuredBooks);
+
+// Get Trending Books
+// Example : http://localhost:4000/api/book/trending-books
+router.get('/trending-books', ipWhitelistMiddleware, bookController.trendingBooks);
+
 // Search By Category
 // Example : http://localhost:4000/api/book/category?category=YourCategoryHere
 router.get('/search-category', ipWhitelistMiddleware, bookController.searchByCategory);

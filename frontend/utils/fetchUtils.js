@@ -17,6 +17,40 @@ export async function fetchBooks() {
         });
 }
 
+export async function fetchFeaturedBooks() {
+    return fetch(`${uri}/book/featured-books`).then((response) => {
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
+        }
+        return response.json();
+    })
+        .then((data) => {
+            return data;
+        })
+        .catch((error) => {
+            console.error('Error:', error);
+            throw error;
+        });
+
+}
+
+export async function fetchTrendingBooks() {
+    return fetch(`${uri}/book/trending-books`).then((response) => {
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
+        }
+        return response.json();
+    })
+        .then((data) => {
+            return data;
+        })
+        .catch((error) => {
+            console.error('Error:', error);
+            throw error;
+        });
+
+}
+
 export async function incrementView(id) {
     return fetch('http://backend:4000/api/book/increment-view', {
         method: 'POST',

@@ -27,3 +27,10 @@ export function truncateText(text, maxLength) {
 export function convertUnicode(input) {
     return input.replace(/\\+u([0-9a-fA-F]{4})/g, (a, b) => String.fromCharCode(parseInt(b, 16)));
 }
+
+export function convertToTitleCase(str) {
+    if (!str) {
+        return ""
+    }
+    return str.toLowerCase().replace(/\b\w/g, s => s.toUpperCase());
+}

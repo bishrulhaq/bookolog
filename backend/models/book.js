@@ -1,9 +1,16 @@
 const { DataTypes } = require('sequelize');
 const sequelize = require('../config/db');
+const encrypt = require('../helpers/utils');
 
 const book = sequelize.define('book', {
+  uuid: {
+    type: DataTypes.STRING(100),
+    unique: true,
+    allowNull: false,
+  },
   title: {
     type: DataTypes.TEXT,
+    allowNull: false,
   },
   subtitle: {
     type: DataTypes.TEXT,
@@ -18,11 +25,11 @@ const book = sequelize.define('book', {
     defaultValue: null,
   },
   published_date: {
-    type: DataTypes.TEXT, 
+    type: DataTypes.TEXT,
     defaultValue: null,
   },
   description: {
-    type: DataTypes.TEXT, 
+    type: DataTypes.TEXT,
     defaultValue: null,
   },
   maturityRating: {
@@ -42,7 +49,7 @@ const book = sequelize.define('book', {
     defaultValue: null,
   },
   categories: {
-    type: DataTypes.JSON, 
+    type: DataTypes.JSON,
     defaultValue: null,
   },
   e_tag: {
@@ -50,7 +57,7 @@ const book = sequelize.define('book', {
     defaultValue: null,
   },
   google_uri: {
-    type: DataTypes.STRING(255), 
+    type: DataTypes.STRING(255),
     defaultValue: null,
   },
   page_count: {
@@ -58,45 +65,49 @@ const book = sequelize.define('book', {
     defaultValue: null,
   },
   print_type: {
-    type: DataTypes.JSON, 
+    type: DataTypes.JSON,
     defaultValue: null,
   },
   isbn_10: {
-    type: DataTypes.STRING(255), 
+    type: DataTypes.STRING(255),
     defaultValue: null,
   },
   isbn_13: {
-    type: DataTypes.STRING(255), 
+    type: DataTypes.STRING(255),
     defaultValue: null,
   },
   publish_country: {
     type: DataTypes.TEXT,
     defaultValue: null,
   },
-  book_authors:{
-    type: DataTypes.JSON, 
+  book_authors: {
+    type: DataTypes.JSON,
     defaultValue: null,
   },
-  author_ids:{
-    type: DataTypes.JSON, 
+  author_ids: {
+    type: DataTypes.JSON,
     defaultValue: null,
   },
-  slug:{
+  slug: {
     type: DataTypes.CHAR(255),
     allowNull: false,
   },
-  status:{
-    type: DataTypes.TINYINT, 
+  status: {
+    type: DataTypes.TINYINT,
     defaultValue: 0,
   },
-  cover_id:{
+  cover_id: {
     type: DataTypes.INTEGER,
     defaultValue: null,
   },
-  views:{
+  views: {
     type: DataTypes.BIGINT,
     defaultValue: 0,
-  }
+  },
+  is_featured: {
+    type: DataTypes.BOOLEAN,
+    defaultValue: false,
+  },
 });
 
 module.exports = book;
