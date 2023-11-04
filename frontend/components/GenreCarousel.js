@@ -89,7 +89,7 @@ const GenreCarousel = () => {
               <div ref={slidesContainerRef} className="slides-container flex snap-x snap-mandatory overflow-hidden overflow-x-auto space-x-2 rounded scroll-smooth">
                 {data.map((item, index) => (
                   <div ref={slideRef} className="slide flex-shrink-0 snap-center rounded overflow-hidden" key={index}>
-                    <Link href={'genre/' + sanitizedUri(item.category_title)}>
+                    <Link href={'/genre/' + sanitizedUri(item.category_title)}>
                       <div className={`max-w-sm inline-flex  items-center px-3 py-2 text-sm font-medium text-center text-white rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800 ${BACKGROUND_GREDIENT[item?.background_color ?? 0]}`}>
                         {convertToTitleCase(item?.category_title)}
                         <svg className="w-3.5 h-3.5 ml-2" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 10">
