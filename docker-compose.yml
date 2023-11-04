@@ -28,6 +28,8 @@ services:
       MYSQL_ROOT_USER: root
       MYSQL_ROOT_PASSWORD: SJFHFIHJGH673
       MYSQL_DATABASE: bookolog
+    volumes:
+      - mariadb_data:/var/lib/mysql  
     ports:
       - "3306:3306"
     networks:
@@ -61,3 +63,6 @@ services:
 networks:
   book-explorer:
     driver: bridge
+
+volumes:
+  mariadb_data:    

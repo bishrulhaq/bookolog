@@ -140,8 +140,8 @@ const bookController = {
           'LIKE',
           `%${category.toLowerCase()}%`
         ),
-        limit: 6,
-        attributes: ['id', 'title', 'subtitle', 'description', 'slug'],
+        limit: 16,
+        attributes: ['id', 'title', 'subtitle', 'description', 'slug', 'uuid', 'book_uid', 'author_ids'],
       });
       res.json(books);
     } catch (error) {
