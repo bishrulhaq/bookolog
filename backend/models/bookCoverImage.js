@@ -1,19 +1,18 @@
 const { DataTypes } = require('sequelize');
 const sequelize = require('../config/db');
 
-const author = sequelize.define('bookCoverImage', {
-  book_uid: {
-    type: DataTypes.STRING(100),
-    unique: true,
+const bookCoverImage = sequelize.define('bookCoverImage', {
+  id: {
+    type: DataTypes.INTEGER,
+    primaryKey: true,
+    autoIncrement: true,
   },
-  cover_uri_primary: {
-    type: DataTypes.STRING(255),
+  cover_img: {
+    type: DataTypes.JSON, 
     defaultValue: null,
-  },
-  cover_uri_alternative: {
-    type: DataTypes.STRING(255),
-    defaultValue: null,
-  },
+  }
 });
 
-module.exports = author;
+
+
+module.exports = bookCoverImage;

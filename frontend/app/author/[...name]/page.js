@@ -1,6 +1,5 @@
 
 "use client"
-
 import { useParams, useRouter } from 'next/navigation'
 import { fetchAuthorById } from '@/utils';
 import { useEffect, useState } from 'react';
