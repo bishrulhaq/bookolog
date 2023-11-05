@@ -1,4 +1,4 @@
-const { author, book, category, authorBookJoin, bookCoverImage } = require('../models'); // Import your models
+const { author, book, category, quote, authorBookJoin, bookCoverImage } = require('../models'); // Import your models
 
 async function syncDatabase() {
   try {
@@ -31,6 +31,12 @@ async function syncDatabase() {
     const authorBookJoinExists = await authorBookJoin.sync({ alter: false });
     if (!authorBookJoinExists) {
       await authorBookJoin.sync({ force: false });
+    }
+
+    // Check if the 'authorBookJoin' table exists and create it if it doesn't
+    const quoteExists = await quote.sync({ alter: false });
+    if (!quoteExists) {
+      await quote.sync({ force: false });
     }
 
     console.log('Tables are created or already exist.\n Database synchronization complete');

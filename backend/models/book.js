@@ -1,6 +1,5 @@
 const { DataTypes } = require('sequelize');
 const sequelize = require('../config/db');
-const encrypt = require('../helpers/utils');
 
 const book = sequelize.define('book', {
   uuid: {

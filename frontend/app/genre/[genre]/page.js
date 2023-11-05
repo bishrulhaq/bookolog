@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'next/navigation'
-import { fetchBooksByGenre, uriToTitle, convertToTitleCase } from '@/utils';
+import { fetchBooksByGenre, removeHyphensAndTitleCase, convertToTitleCase } from '@/utils';
 import Link from 'next/link';
 import Image from 'next/image';
 
@@ -16,8 +16,8 @@ const GenreByTitle = () => {
 
         const fetchData = async () => {
             try {
-                const booksByGenre = await fetchBooksByGenre(uriToTitle(genre));
-                setGenreName(uriToTitle(genre));
+                const booksByGenre = await fetchBooksByGenre(removeHyphensAndTitleCase(genre));
+                setGenreName(removeHyphensAndTitleCase(genre));
                 setBooks(booksByGenre);
                 setIsLoading(false);
             } catch (error) {
@@ -60,7 +60,7 @@ const GenreByTitle = () => {
 
                         <div className="grid grid-cols-1 grid-cols-2 md:grid-cols-3 lg:grid-cols-4 mx-auto max-w-screen-xl gap-8 px-4 b-shadow">
                             {books.map((book) => (
-                                <div key={book.id} className="bg-white rounded-lg shadow-lg">
+                                <div key={book.id} className="bg-white rounded-lg shadow-lg flex flex-col">
                                     <div className="relative h-[400px] rounded-t-lg overflow-hidden">
                                         <Image
                                             src={`https://books.google.com/books/content?id=${book.book_uid}&printsec=frontcover&img=1&zoom=0&edge=curl&source=gbs_api`}
@@ -69,7 +69,7 @@ const GenreByTitle = () => {
                                             objectFit="cover"
                                         />
                                     </div>
-                                    <div className="p-4">
+                                    <div className="px-4 py-5 flex-grow">
                                         <h3 className="text-xl font-semibold">{convertToTitleCase(book.title)}</h3>
                                         <p className="text-gray-600">
                                             {book.author_ids != null && typeof book.author_ids === 'string' && (
@@ -95,10 +95,14 @@ const GenreByTitle = () => {
                                         {book.subtitle && (
                                             <p className="mt-2 text-gray-700">{convertToTitleCase(book.subtitle)}</p>
                                         )}
-                                        <Link href={`/book/${book.slug}/${book.uuid}`} className="block mt-4 text-blue-500 hover:underline">
-                                            Learn More
-                                        </Link>
                                     </div>
+
+                                    <Link href={`/book/${book.slug}/${book.uuid}`} className="flex justify-center pb-2">
+                                        <button type="button" className="text-white bg-gradient-to-r from-blue-500 via-blue-600 to-blue-700 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 shadow-lg shadow-blue-500/50 dark:shadow-lg dark:shadow-blue-800/80 font-medium rounded-lg text-sm px-5 py-2.5 text-center mr-2 mb-2 ">
+                                            Learn More
+                                        </button>
+                                    </Link>
+
                                 </div>
                             ))}
                         </div>

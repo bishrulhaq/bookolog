@@ -1,5 +1,6 @@
 const { DataTypes } = require('sequelize');
 const sequelize = require('../config/db');
+const {sanitizedUri} = require('../helpers/utils');
 
 const category = sequelize.define('category', {
   category_title: {
@@ -30,12 +31,18 @@ const category = sequelize.define('category', {
     type: DataTypes.STRING(255),
     defaultValue: null,
   },
+  slug: {
+    type: DataTypes.STRING(255),
+    unique: true,
+    defaultValue: null,
+  },
 }, {
   hooks: {
     beforeCreate: function (category) {
       category.category_title = category.category_title.toLowerCase();
+      category.slug = sanitizedUri(category.category_title);
       return category;
-    }
+    },
   }
 });
 

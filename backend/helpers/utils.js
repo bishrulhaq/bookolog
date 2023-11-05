@@ -36,16 +36,17 @@ const logger = createLogger({
 });
 
 function sanitizedUri(uri) {
-    const sanitizedTitle = uri.replace(/[^a-z0-9]+/gi, '-').toLowerCase();
-    const truncatedTitle = sanitizedTitle.substring(0, 300);
-    const convertedTitle = truncatedTitle.replace(/&/g, 'and');
-    const finalSlug = convertedTitle.replace(/^-+|-+$/g, '');
-    return encodeURIComponent(finalSlug);
+  const sanitizedTitle = uri.replace(/(\w+)'?/g, '$1').replace(/[^a-z0-9]+/gi, '-').toLowerCase();
+  const truncatedTitle = sanitizedTitle.substring(0, 300);
+  const convertedTitle = truncatedTitle.replace(/&/g, 'and');
+
+  const finalSlug = convertedTitle.replace(/^-+|-+$/g, '');
+  return encodeURIComponent(finalSlug);
 }
 
 module.exports = {
-    sanitizedUri,
-    logger,
-    encrypt,
-    decrypt
+  sanitizedUri,
+  logger,
+  encrypt,
+  decrypt
 };

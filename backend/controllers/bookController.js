@@ -1,4 +1,4 @@
-const { Sequelize } = require('sequelize');
+const { Sequelize, Op } = require('sequelize');
 const sequelize = require('../config/db');
 const { book, author, category } = require('../models');
 const axios = require('axios');
