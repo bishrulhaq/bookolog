@@ -54,10 +54,11 @@ const GenreByTitle = () => {
                     </div>
                 ) : books.length !== 0 ? (
                     <>
-                        <h2 className="text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-br from-blue-600 to-purple-800 text-center mb-5">
+                        <h2 className="md:text-2xl lg:text-3xl font-bold bg-clip-text text-transparent bg-gradient-to-br from-blue-600 to-purple-800 text-center b-shadow mb-5 md:py-4 py-2">
                             Books in the {genreName} Genre
                         </h2>
-                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 b-shadow">
+
+                        <div className="grid grid-cols-1 grid-cols-2 md:grid-cols-3 lg:grid-cols-4 mx-auto max-w-screen-xl gap-8 px-4 b-shadow">
                             {books.map((book) => (
                                 <div key={book.id} className="bg-white rounded-lg shadow-lg">
                                     <div className="relative h-[400px] rounded-t-lg overflow-hidden">
@@ -103,7 +104,7 @@ const GenreByTitle = () => {
                         </div>
                     </>
                 ) : (
-                    <h2 className="text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-br from-blue-600 to-purple-800 text-center">
+                    <h2 className="md:text-2xl lg:text-3xl font-bold bg-clip-text text-transparent bg-gradient-to-br from-blue-600 to-purple-800 text-center b-shadow mb-5 md:py-4 py-2">
                         No Results Found for {genreName} Genre
                     </h2>
                 )}

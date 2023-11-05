@@ -8,7 +8,10 @@ const { logger, sanitizedUri, encrypt, decrypt } = require('../helpers/utils');
 const bookController = {
   getAll: async (req, res) => {
     try {
-      const books = await book.findAll();
+      const books = await book.findAll({
+        order: [['updatedAt', 'DESC']],
+        limit: 24,
+      });
       res.json(books);
     } catch (error) {
       console.error(error);

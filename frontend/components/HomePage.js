@@ -33,7 +33,7 @@ export default function App() {
               Trending Books
             </h5>
 
-            <p className="text-sm font-normal text-gray-500 dark:text-gray-400">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla vel bibendum dolor.</p>
+            <p className="text-sm font-normal text-gray-500 dark:text-gray-400">Discover the latest literary sensations in just a few scrolls. Our trending books showcase the most captivating titles that everyone's talking about. Stay in the know with these literary gems.</p>
             <ul className="my-4 space-y-3">
               {trendingBooks.map((book, index) => (
                 <li key={index}>
@@ -49,7 +49,7 @@ export default function App() {
                 <svg className="w-3 h-3 mr-2" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
                   <path stroke="currentColor" strokeLinecap="round" stroke-linejoin="round" stroke-width="2" d="M7.529 7.988a2.502 2.502 0 0 1 5 .191A2.441 2.441 0 0 1 10 10.582V12m-.01 3.008H10M19 10a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
                 </svg>
-                Lorem ipsum dolor sit amet,
+                Trending books are based on the views and user demography.
               </a>
             </div>
           </div>
