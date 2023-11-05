@@ -12,6 +12,13 @@ export function sanitizedUri(uri) {
     return encodeURIComponent(finalSlug);
 }
 
+export function removeHyphensAndTitleCase(input) {
+    const words = input.split('-').map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase());
+    const result = words.join(' ');
+    return result;
+  }
+  
+
 export function navigateToBook(title, id) {
     return '/book/' + encodeURIComponent(title) + '/' + id;
 }

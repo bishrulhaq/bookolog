@@ -1,6 +1,6 @@
 "use client"
 import { useParams, useRouter } from 'next/navigation'
-import { fetchBookById } from '@/utils';
+import { fetchBookById, convertToTitleCase } from '@/utils';
 import { useEffect, useState } from 'react';
 import Image from 'next/image';
 
@@ -31,16 +31,6 @@ export default function BookPage() {
     fetchData();
 
   }, [params?.name[1]]);
-
-
-  function toTitleCase(str) {
-    return str.replace(
-      /\w\S*/g,
-      function (txt) {
-        return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();
-      }
-    );
-  }
 
 
   return (
@@ -95,15 +85,15 @@ export default function BookPage() {
                   className='rounded-lg b-shadow' />
               </div>
               <div className="lg:w-8/12 xl:w-75/100 px-4 mt-5">
-                <h2 className="mb-4 text-4xl tracking-tight font-extrabold text-gray-900 dark:text-white">{toTitleCase(book?.title)}</h2>
+                <h2 className="mb-4 text-4xl tracking-tight font-extrabold text-gray-900 dark:text-white">{convertToTitleCase(book?.title)}</h2>
                 <div className="items-center py-2 my-2 text-base font-bold text-gray-900">
                   {book?.views > 0 && (<span className="inline-flex items-center justify-center px-2 py-0.5 mx-3 mb-3 text-xs font-medium text-white bg-gradient-darkgoldenrod rounded">Views : {book?.views}</span>)}
                   {
                     book?.author_ids != null && typeof book?.author_ids === 'string' &&
                     JSON.parse(book?.author_ids)?.map((author, index, authorsArray) => (
                       <div key={index} className="whitespace-wrap mx-3">
-                        {author?.key ? <a href={`/author/${author?.key}`} className="text-blue-500 hover:text-blue-600 dark:hover:text-blue-400">{toTitleCase(author?.name)}</a> :
-                          <span className="text-yellow-500 hover:text-yellow-600 dark:hover:text-yellow-400">{toTitleCase(author?.name)}</span>}
+                        {author?.key ? <a href={`/author/${author?.key}`} className="text-blue-500 hover:text-blue-600 dark:hover:text-blue-400">{convertToTitleCase(author?.name)}</a> :
+                          <span className="text-yellow-500 hover:text-yellow-600 dark:hover:text-yellow-400">{convertToTitleCase(author?.name)}</span>}
                         {index !== authorsArray.length - 1 && (
                           <span className="mx-2">,</span>
                         )}
@@ -112,7 +102,7 @@ export default function BookPage() {
                   }
                 </div>
       
-                {book?.subtitle && (<p className="mb-6 font-light text-gray-500 md:text-lg dark:text-gray-400">{toTitleCase(book?.subtitle)} <hr className='hr-fade' /></p>)}
+                {book?.subtitle && (<p className="mb-6 font-light text-gray-500 md:text-lg dark:text-gray-400">{convertToTitleCase(book?.subtitle)} <hr className='hr-fade' /></p>)}
                 {book?.description && (<div className="mb-6 md:text-lg dark:text-gray-400 text-justify" dangerouslySetInnerHTML={{ __html: book?.description }}></div>)}
                 <p className="text-gray-600 mb-2">ISBN 10: {book?.isbn_10} ISBN 13: {book?.isbn_13}</p>
               </div>

@@ -3,6 +3,7 @@ const book = require('./book');
 const category = require('./category');
 const bookCoverImage = require('./bookCoverImage');
 const authorBookJoin = require('./authorBookJoin');
+const quote = require('./quote');
 
 // Define associations between models here (if using Sequelize)
 book.belongsToMany(author, { through: authorBookJoin });
@@ -12,6 +13,7 @@ book.belongsTo(bookCoverImage, { foreignKey: 'cover_id' });
 module.exports = {
   author,
   book,
+  quote,
   category,
   bookCoverImage,
   authorBookJoin,
