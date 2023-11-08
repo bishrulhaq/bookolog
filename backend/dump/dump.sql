@@ -7,25 +7,23 @@
 /*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
-DROP DATABASE IF EXISTS `bookolog`;
 CREATE DATABASE IF NOT EXISTS `bookolog` /*!40100 DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci */;
 USE `bookolog`;
 
-DROP TABLE IF EXISTS `authorBookJoins`;
-CREATE TABLE IF NOT EXISTS `authorBookJoins` (
+CREATE TABLE IF NOT EXISTS `authorBookJoin` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `createdAt` datetime NOT NULL,
   `updatedAt` datetime NOT NULL,
-  `bookId` int(11) DEFAULT NULL,
-  `authorId` int(11) DEFAULT NULL,
+  `book_id` int(11) DEFAULT NULL,
+  `author_id` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`),
-  UNIQUE KEY `authorBookJoins_authorId_bookId_unique` (`bookId`,`authorId`),
+  UNIQUE KEY `authorBookJoin_authorId_bookId_unique` (`book_id`,`author_id`),
   KEY `authorId` (`authorId`),
-  CONSTRAINT `authorBookJoins_ibfk_1` FOREIGN KEY (`bookId`) REFERENCES `books` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `authorBookJoins_ibfk_2` FOREIGN KEY (`authorId`) REFERENCES `authors` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
+  CONSTRAINT `authorBookJoins_ibfk_1` FOREIGN KEY (`book_id`) REFERENCES `book` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `authorBookJoins_ibfk_2` FOREIGN KEY (`author_id`) REFERENCES `author` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB AUTO_INCREMENT=48 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
-INSERT INTO `authorBookJoins` (`id`, `createdAt`, `updatedAt`, `bookId`, `authorId`) VALUES
+INSERT INTO `authorBookJoin` (`id`, `createdAt`, `updatedAt`, `book_id`, `author_id`) VALUES
 	(1, '2023-11-05 08:34:03', '2023-11-05 08:34:03', 1, 1),
 	(2, '2023-11-05 08:34:04', '2023-11-05 08:34:04', 2, 2),
 	(3, '2023-11-05 08:39:53', '2023-11-05 08:39:53', 3, 3),
@@ -74,8 +72,7 @@ INSERT INTO `authorBookJoins` (`id`, `createdAt`, `updatedAt`, `bookId`, `author
 	(46, '2023-11-05 08:47:41', '2023-11-05 08:47:41', 58, 45),
 	(47, '2023-11-05 08:47:42', '2023-11-05 08:47:42', 59, 46);
 
-DROP TABLE IF EXISTS `authors`;
-CREATE TABLE IF NOT EXISTS `authors` (
+CREATE TABLE IF NOT EXISTS `author` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(255) NOT NULL,
   `alternate_names` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL CHECK (json_valid(`alternate_names`)),
@@ -91,7 +88,7 @@ CREATE TABLE IF NOT EXISTS `authors` (
   UNIQUE KEY `author_uid` (`author_uid`)
 ) ENGINE=InnoDB AUTO_INCREMENT=47 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
-INSERT INTO `authors` (`id`, `name`, `alternate_names`, `author_uid`, `birth_year`, `death_year`, `biography`, `slug`, `img_uri`, `createdAt`, `updatedAt`) VALUES
+INSERT INTO `author` (`id`, `name`, `alternate_names`, `author_uid`, `birth_year`, `death_year`, `biography`, `slug`, `img_uri`, `createdAt`, `updatedAt`) VALUES
 	(1, 'Catherine Ripley', NULL, 'OL3075525A', NULL, NULL, NULL, 'catherine-ripley', NULL, '2023-11-05 08:34:03', '2023-11-05 08:34:03'),
 	(2, 'Neil A. Downie', NULL, 'OL2769404A', NULL, NULL, NULL, 'neil-a-downie', NULL, '2023-11-05 08:34:04', '2023-11-05 08:34:04'),
 	(3, 'Neil Caplan', NULL, 'OL4597719A', NULL, NULL, NULL, 'neil-caplan', NULL, '2023-11-05 08:39:53', '2023-11-05 08:39:53'),
@@ -139,8 +136,7 @@ INSERT INTO `authors` (`id`, `name`, `alternate_names`, `author_uid`, `birth_yea
 	(45, 'Anna Howard Shaw', NULL, 'OL7737569A', NULL, NULL, NULL, 'anna-howard-shaw', NULL, '2023-11-05 08:47:41', '2023-11-05 08:47:41'),
 	(46, 'Kimberly Messer', NULL, 'OL2889284A', NULL, NULL, NULL, 'kimberly-messer', NULL, '2023-11-05 08:47:42', '2023-11-05 08:47:42');
 
-DROP TABLE IF EXISTS `bookCoverImages`;
-CREATE TABLE IF NOT EXISTS `bookCoverImages` (
+CREATE TABLE IF NOT EXISTS `bookCoverImage` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `cover_img` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL CHECK (json_valid(`cover_img`)),
   `createdAt` datetime NOT NULL,
@@ -148,9 +144,7 @@ CREATE TABLE IF NOT EXISTS `bookCoverImages` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
-
-DROP TABLE IF EXISTS `books`;
-CREATE TABLE IF NOT EXISTS `books` (
+CREATE TABLE IF NOT EXISTS `book` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `uuid` varchar(100) NOT NULL,
   `title` text NOT NULL,
@@ -187,7 +181,7 @@ CREATE TABLE IF NOT EXISTS `books` (
   CONSTRAINT `books_ibfk_1` FOREIGN KEY (`cover_id`) REFERENCES `bookCoverImages` (`id`) ON DELETE NO ACTION ON UPDATE CASCADE
 ) ENGINE=InnoDB AUTO_INCREMENT=60 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
-INSERT INTO `books` (`id`, `uuid`, `title`, `subtitle`, `book_uid`, `publisher`, `published_date`, `description`, `maturityRating`, `contentVersion`, `language`, `search_info`, `categories`, `e_tag`, `google_uri`, `page_count`, `print_type`, `isbn_10`, `isbn_13`, `publish_country`, `book_authors`, `author_ids`, `slug`, `status`, `cover_id`, `views`, `is_featured`, `createdAt`, `updatedAt`) VALUES
+INSERT INTO `book` (`id`, `uuid`, `title`, `subtitle`, `book_uid`, `publisher`, `published_date`, `description`, `maturityRating`, `contentVersion`, `language`, `search_info`, `categories`, `e_tag`, `google_uri`, `page_count`, `print_type`, `isbn_10`, `isbn_13`, `publish_country`, `book_authors`, `author_ids`, `slug`, `status`, `cover_id`, `views`, `is_featured`, `createdAt`, `updatedAt`) VALUES
 	(1, '6479a73a562e7d24f8bf3f97deb4a2d3', 'Why?', 'The Best Ever Question and Answer Book about Nature, Science and the World Around You', 'K-MhngEACAAJ', 'Owlkids', '2010', 'Everyday childhood activities, such as an excursion to the park, splashing in the bathtub, or fixing a snack in the kitchen, can arouse many questions in young children. Why is the sky blue? Why does my stomach g-r-r-owl? Why do cows moo? Curious kids want to know, and no adult has all the answers. The 10th anniversary edition of Why? provides kid-friendly explanations for nearly one hundred of these everyday mysteries for a whole new generation of children. This delightfully light storybook approach takes young readers inside the kitchen and out to the park, from the farm to the supermarket, and from bathtime to bedtime. The question and answer format reveals fascinating tidbits about nature, science and the world around us. Bright, playful illustrations by Scot Ritchie are the perfect complement, setting the scenes for the common questions that kids ask. Perfect for reading aloud at bedtime or in a classroom setting, Why? combines the best qualities of nonfiction and picture book to delight young readers.', 'NOT_MATURE', 'preview-1.0.0', 'en', NULL, NULL, '+86JvbusX0s', 'https://www.googleapis.com/books/v1/volumes/K-MhngEACAAJ', 192, '"BOOK"', '1926818008', '9781926818009', NULL, '["Catherine Ripley"]', '[{"name":"Catherine Ripley","key":"OL3075525A","k_id":1}]', 'why', 1, NULL, 2, 0, '2023-11-05 08:34:00', '2023-11-05 08:34:03'),
 	(2, '80c2b4bd14ee3a0fb6c45699e579e9f2', 'The Ultimate Book of Saturday Science', 'The Very Best Backyard Science Experiments You Can Do Yourself', '0YDal4Lj59kC', 'Princeton University Press', '2012-05-13', '<p><b>The best backyard experiments for hands-on science learning</b><br><br><i>The Ultimate Book of Saturday Science</i> is Neil Downie\'s biggest and most astounding compendium yet of science experiments you can do in your own kitchen or backyard using common household items. It may be the only book that encourages hands-on science learning through the use of high-velocity, air-driven carrots.<br><br>Downie, the undisputed maestro of Saturday science, here reveals important principles in physics, engineering, and chemistry through such marvels as the Helevator—a contraption that\'s half helicopter, half elevator—and the Rocket Railroad, which pumps propellant up from its own track. The Riddle of the Sands demonstrates why some granular materials form steep cones when poured while others collapse in an avalanche. The Sunbeam Exploder creates a combustible delivery system out of sunlight, while the Red Hot Memory experiment shows you how to store data as heat. Want to learn to tell time using a knife and some butter? There\'s a whole section devoted to exotic clocks and oscillators that teaches you how.<br><br><i>The Ultimate Book of Saturday Science</i> features more than seventy fun and astonishing experiments that range in difficulty from simple to more challenging. All of them are original, and all are guaranteed to work. Downie provides instructions for each one and explains the underlying science, and also presents experimental variations that readers will want to try.</p>', 'NOT_MATURE', '1.3.4.0.preview.3', 'en', NULL, '["Science / Experiments & Projects","Science / Physics / General","Technology & Engineering / General","Science / Chemistry / General","Science / General","Science / Scientific Instruments","Technology & Engineering / Engineering (General)"]', 'iWYKbyyExnM', 'https://www.googleapis.com/books/v1/volumes/0YDal4Lj59kC', 576, '"BOOK"', '1400841739', '9781400841738', NULL, '["Neil A. Downie"]', '[{"name":"Neil A. Downie","key":"OL2769404A","k_id":2}]', 'the-ultimate-book-of-saturday-science', 1, NULL, 2, 1, '2023-11-05 08:34:02', '2023-11-05 08:34:04'),
 	(3, '4b4ca1db945f44e7b88e4019720fb7e2', 'The Israel-Palestine Conflict', 'Contested Histories', 'DM-mDwAAQBAJ', 'John Wiley & Sons', '2019-09-04', '<p>One of the "10 Must-Read Histories of the Palestine-Israel Conflict"<br>—<b>Ian Black</b>, Literary Hub, on the 100th anniversary of the Balfour Declaration</p> <p><b>The new edition of the acclaimed text that explores the issues continuing to define the Israeli-Palestinian conflict</b></p> <p>Numerous instances of competing, sometimes incompatible narratives of controversial events are found throughout history. Perhaps the starkest example of such contradictory representations is the decades-long conflict between Israel and Palestine. For over 140 years, Israelis, Palestinians, and scores of peacemakers have failed to establish a sustainable, mutually-acceptable solution. <i>The Israel-Palestine Conflict </i>introduces the historical basis of the dispute and explores both the tangible issues and intangible factors that have blocked a peaceful resolution. Author Neil Caplan helps readers understand the complexities and contradictions of the conflict and why the histories of Palestine and Israel are so fiercely contested.</p> <p>Now in its second edition, this book has been thoroughly updated to reflect the events that have transpired since its original publication. Fresh insights consider the impact of current global and regional instability and violence on the prospects of peace and reconciliation. New discussions address recent debates over two-state versus one-state solutions, growing polarization in public discourse outside of the Middle East, the role of public intellectuals, and the growing trend of merging scholarship with advocacy. Part of the Wiley-Blackwell <i>Contested Histories</i> series, this clear and accessible volume:</p> <ul> <li>Offers a balanced, non-polemic approach to current academic discussions and political debates on the Israel-Palestine conflict</li> <li>Highlights eleven core arguments viewed by the author as unwinnable</li> <li>Encourages readers to go beyond simply assigning blame in the conflict</li> <li>Explores the major historiographical debates arising from the dispute</li> <li>Includes updated references and additional maps</li> </ul> <p>Already a standard text for courses on the history and politics of the Middle East, <i>The Israel-Palestine Conflict </i>is an indispensable resource for students, scholars, and interested general readers.</p>', 'NOT_MATURE', '0.2.2.0.preview.1', 'en', NULL, '["History / Middle East / General","History / General"]', 'm7FlpegnYrw', 'https://www.googleapis.com/books/v1/volumes/DM-mDwAAQBAJ', 384, '"BOOK"', '1119523877', '9781119523871', NULL, '["Neil Caplan"]', '[{"name":"Neil Caplan","key":"OL4597719A","k_id":3}]', 'the-irael-paletine-conflict', 1, NULL, 2, 0, '2023-11-05 08:39:51', '2023-11-05 08:39:53'),
@@ -248,8 +242,7 @@ INSERT INTO `books` (`id`, `uuid`, `title`, `subtitle`, `book_uid`, `publisher`,
 	(58, 'bcef5d07ab1e969ec648c2255391b3cd', 'Anna Howard Shaw, the Story of a Pioneer', NULL, 'wQlNAwAAQBAJ', 'Wipf and Stock Publishers', '2011-01-01', '<i>Anna Howard Shaw: The Story of a Pioneer</i> is one of the classic autobiographies of American letters. A leader in the church as well as the suffrage movement, an M.D. as well as a powerful and eloquent lecturer, Anna Howard Shaw (1847-1919) was a close associate of Susan B. Anthony and the first woman to receive the United States Distinguished Service Medal.<br> <br> Born in England, Shaw immigrated to the United States as a child and in 1880 became the first woman ordained as a Methodist preacher. She subsequently left the pulpit to serve as president of the National American Suffrage Association--and later, as head of the Women\'s Committee of the Council of National Defense during World War I.<br> <br> Leontine T. C. Kelly was the first woman African American bishop in the United Methodist church. She retired in 1988.', 'NOT_MATURE', '0.1.1.0.preview.1', 'en', NULL, '["Religion / Christianity / History","Religion / Christian Church / History","Religion / Christian Theology / History"]', 'YJteSQl3XZY', 'https://www.googleapis.com/books/v1/volumes/wQlNAwAAQBAJ', 362, '"BOOK"', '1610973453', '9781610973458', NULL, '["Anna Howard Shaw"]', '[{"name":"Anna Howard Shaw","key":"OL7737569A","k_id":45}]', 'anna-howard-shaw-the-story-of-a-pioneer', 1, NULL, 2, 0, '2023-11-05 08:47:39', '2023-11-05 08:47:42'),
 	(59, '3a546b646305fc4d9c9b13b20ad2ab33', 'Falling for Work: A Story of Death and Determination', NULL, 'GOaJCgAAQBAJ', 'Lulu.com', '2015-08-12', 'When Dan loses his best friend to an occupational accident, he questions everything. Did the company do enough to protect him? Are the rest of us protected from this happening again? Dan\'s questions turn into an unshakeable resolve to improve safety for the company-to make sure that his friend didn\'t die in vain. Dan\'s journey from ignorance to expertise illustrates how all organizations can and should approach protecting workers at heights.', 'NOT_MATURE', '0.3.0.0.preview.1', 'en', NULL, '["Business & Economics / General"]', '965Y7kqZYEk', 'https://www.googleapis.com/books/v1/volumes/GOaJCgAAQBAJ', 104, '"BOOK"', '1329458567', '9781329458567', NULL, '["Kimberly Messer"]', '[{"name":"Kimberly Messer","key":"OL2889284A","k_id":46}]', 'falling-for-work-a-story-of-death-and-determination', 1, NULL, 3, 0, '2023-11-05 08:47:40', '2023-11-05 09:14:48');
 
-DROP TABLE IF EXISTS `categories`;
-CREATE TABLE IF NOT EXISTS `categories` (
+CREATE TABLE IF NOT EXISTS `category` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `category_title` varchar(100) DEFAULT NULL,
   `description` text DEFAULT NULL,
@@ -266,7 +259,7 @@ CREATE TABLE IF NOT EXISTS `categories` (
   UNIQUE KEY `slug` (`slug`)
 ) ENGINE=InnoDB AUTO_INCREMENT=165 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
-INSERT INTO `categories` (`id`, `category_title`, `description`, `background_color`, `status`, `displayed_in`, `icon`, `img_uri`, `slug`, `createdAt`, `updatedAt`) VALUES
+INSERT INTO `category` (`id`, `category_title`, `description`, `background_color`, `status`, `displayed_in`, `icon`, `img_uri`, `slug`, `createdAt`, `updatedAt`) VALUES
 	(1, 'science', NULL, 8, NULL, 1, NULL, NULL, 'science', '2023-11-05 08:34:02', '2023-11-05 08:34:02'),
 	(2, 'experiments & projects', NULL, 5, NULL, 0, NULL, NULL, 'experiment-project', '2023-11-05 08:34:02', '2023-11-05 08:34:02'),
 	(3, 'physics', NULL, 19, NULL, 0, NULL, NULL, 'physics', '2023-11-05 08:34:02', '2023-11-05 08:34:02'),
@@ -410,7 +403,6 @@ INSERT INTO `categories` (`id`, `category_title`, `description`, `background_col
 	(163, 'christian church', NULL, 23, NULL, 0, NULL, NULL, 'christian-church', '2023-11-05 08:47:39', '2023-11-05 08:47:39'),
 	(164, 'christian theology', NULL, 5, NULL, 0, NULL, NULL, 'christian-theology', '2023-11-05 08:47:39', '2023-11-05 08:47:39');
 
-DROP TABLE IF EXISTS `quotes`;
 CREATE TABLE IF NOT EXISTS `quotes` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `quote` text NOT NULL,

@@ -43,7 +43,6 @@ const SearchBar = () => {
       }
     };
 
-
     window.addEventListener('click', handleClickOutside);
 
     return () => {
