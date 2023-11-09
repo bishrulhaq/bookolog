@@ -1,6 +1,6 @@
 "use client"
 
-import { fetchBooks, convertToTitleCase } from '@/utils';
+import { fetchBooks, convertToTitleCase, sanitizedUri } from '@/utils';
 import { useEffect, useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
@@ -89,7 +89,7 @@ export default function BooksPage() {
                           <span key={index}>
                             {author.key ? (
                               <a
-                                href={`/author/${author.key}`}
+                                href={`/author/${sanitizedUri(author.name)}/${author.k_id}`}
                                 className="text-blue-500 hover:text-blue-600 dark:hover:text-blue-400"
                               >
                                 {convertToTitleCase(author.name)}

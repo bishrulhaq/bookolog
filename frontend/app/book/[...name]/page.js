@@ -1,6 +1,6 @@
 "use client"
 import { useParams, useRouter } from 'next/navigation'
-import { fetchBookById, convertToTitleCase } from '@/utils';
+import { fetchBookById, convertToTitleCase, sanitizedUri } from '@/utils';
 import { useEffect, useState } from 'react';
 import Image from 'next/image';
 
@@ -92,7 +92,7 @@ export default function BookPage() {
                     book?.author_ids != null && typeof book?.author_ids === 'string' &&
                     JSON.parse(book?.author_ids)?.map((author, index, authorsArray) => (
                       <div key={index} className="whitespace-wrap mx-3">
-                        {author?.key ? <a href={`/author/${author?.key}`} className="text-blue-500 hover:text-blue-600 dark:hover:text-blue-400">{convertToTitleCase(author?.name)}</a> :
+                        {author?.key ? <a href={`/author/${sanitizedUri(author.name)}/${author.k_id}`} className="text-blue-500 hover:text-blue-600 dark:hover:text-blue-400">{convertToTitleCase(author?.name)}</a> :
                           <span className="text-yellow-500 hover:text-yellow-600 dark:hover:text-yellow-400">{convertToTitleCase(author?.name)}</span>}
                         {index !== authorsArray.length - 1 && (
                           <span className="mx-2">,</span>
@@ -101,7 +101,7 @@ export default function BookPage() {
                     ))
                   }
                 </div>
-      
+
                 {book?.subtitle && (<p className="mb-6 font-light text-gray-500 md:text-lg dark:text-gray-400">{convertToTitleCase(book?.subtitle)} <hr className='hr-fade' /></p>)}
                 {book?.description && (<div className="mb-6 md:text-lg dark:text-gray-400 text-justify" dangerouslySetInnerHTML={{ __html: book?.description }}></div>)}
                 <p className="text-gray-600 mb-2">ISBN 10: {book?.isbn_10} ISBN 13: {book?.isbn_13}</p>

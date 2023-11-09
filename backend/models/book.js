@@ -110,7 +110,7 @@ module.exports = function (sequelize, DataTypes) {
   });
 
   book.associate = function (models) {
-    book.belongsToMany(models.author, { through: 'authorBookJoin' });
+    book.belongsToMany(models.author, { through: 'authorBookJoin', foreignKey: 'book_id' });
   };
 
 

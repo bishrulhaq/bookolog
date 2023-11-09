@@ -1,6 +1,6 @@
 import Image from 'next/image';
 import React, { useState, useEffect } from 'react';
-import { fetchFeaturedBooks, convertToTitleCase } from '@/utils';
+import { fetchFeaturedBooks, convertToTitleCase, sanitizedUri } from '@/utils';
 import Link from 'next/link';
 
 const FeaturedBooks = () => {
@@ -61,7 +61,7 @@ const FeaturedBooks = () => {
                                                     <span key={index}>
                                                         {author.key ? (
                                                             <a
-                                                                href={`/author/${author.key}`}
+                                                                href={`/author/${sanitizedUri(author.name)}/${author.k_id}`}
                                                                 className="text-blue-500 hover:text-blue-600 dark:hover:text-blue-400"
                                                             >
                                                                 {convertToTitleCase(author.name)}
