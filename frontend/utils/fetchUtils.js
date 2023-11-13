@@ -1,4 +1,6 @@
 
+import { NextResponse } from 'next/server'
+
 const uri = process.env.APP_ENV === 'development' ? 'http://localhost:4000/api' : 'https://bookolog.com/api';
 
 export async function fetchBooks() {
@@ -169,8 +171,6 @@ export async function fetchHomeScreenGenres() {
         });
 }
 
-
-
 export async function fetchAllGenres() {
 
     return fetch(`${uri}/category/all`).then((response) => {
@@ -188,6 +188,40 @@ export async function fetchAllGenres() {
         });
 }
 
+export async function fetchRegister(credentials) {
+    try {
+        const response = await fetch(`http://backend:4000/auth/register`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(credentials),
+        });
+
+        return response.json();
+    } catch (error) {
+        console.error('Error:', error.message);
+        throw error;
+    }
+}
+
+export async function fetchLogin(credentials) {
+
+    return fetch(`${uri}/auth/login`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(credentials)
+    }).then((response) => {
+        
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
+        }
+
+        return response.json();
+    }).catch((error) => {
+        console.error('Error:', error);
+        throw error;
+    });
+
+}
 
 export async function fetchBookById(getByd) {
 

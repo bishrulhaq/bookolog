@@ -5,9 +5,9 @@ import GenreCarousel from "@/components/GenreCarousel"
 const Header = () => {
   return (
     <>
-    <NavBar />
-    <SearchBar />
-    <GenreCarousel/>
+      <NavBar />
+      <SearchBar />
+      <GenreCarousel className="mx-auto max-w-screen-xl" />
     </>
   )
 }

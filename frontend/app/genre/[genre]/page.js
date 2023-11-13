@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'next/navigation'
-import { fetchBooksByGenre, removeHyphensAndTitleCase, convertToTitleCase } from '@/utils';
+import { fetchBooksByGenre, removeHyphensAndTitleCase, sanitizedUri, convertToTitleCase } from '@/utils';
 import Link from 'next/link';
 import Image from 'next/image';
 
@@ -77,7 +77,7 @@ const GenreByTitle = () => {
                                                     <span key={index}>
                                                         {author.key ? (
                                                             <a
-                                                                href={`/author/${author.key}`}
+                                                                href={`/author/${sanitizedUri(author.name)}/${author.k_id}`}
                                                                 className="text-blue-500 hover:text-blue-600 dark:hover:text-blue-400"
                                                             >
                                                                 {convertToTitleCase(author.name)}

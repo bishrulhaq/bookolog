@@ -2,6 +2,7 @@ const express = require('express');
 const bookRoutes = require('./routes/bookRoutes');
 const authorRoutes = require('./routes/authorRoutes');
 const categoryRoutes = require('./routes/categoryRoutes');
+const authRoutes = require('./routes/authRoutes');
 // const syncDatabase = require('./scripts/sync');
 const db = require('./models');
 
@@ -15,10 +16,16 @@ const cors = require('cors')
 const app = express();
 
 // Enable CORS
-app.use(cors())
+app.use(cors());
 
 // Middleware
 app.use(express.json());
+
+// Parse URL-encoded bodies (as sent by HTML forms)
+app.use(express.urlencoded({ extended: true }));
+
+// Auth Routes
+app.use('/auth', authRoutes);
 
 // Book Routes
 app.use('/api/book', bookRoutes);

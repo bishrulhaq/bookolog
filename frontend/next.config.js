@@ -2,6 +2,7 @@
 const nextConfig = {
   experimental: {
     outputStandalone: true,
+    serverActions: true,
   },
   theme: {
     typography: (theme) => ({}),

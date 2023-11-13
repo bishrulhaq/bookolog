@@ -1,9 +1,8 @@
-import './globals.css'
-import { Inter } from 'next/font/google'
+
 import Header from '@/components/Header'
 import Footer from '@/components/Footer'
-
-const inter = Inter({ subsets: ['latin'] })
+import { Provider } from "@/components/Provider"
+import './globals.css'
 
 export const metadata = {
   title: 'Bookolog',
@@ -13,12 +12,14 @@ export const metadata = {
 export default function RootLayout({ children }) {
 
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
       <link rel="icon" href="/favicon.ico" sizes="any" />
-      <body className={`${inter.className} dark:bg-gray-800`}>
+      <body>
+        <Provider>
           <Header />
           {children}
           <Footer />
+        </Provider>
       </body>
     </html>
   )

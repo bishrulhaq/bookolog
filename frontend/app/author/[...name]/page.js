@@ -103,36 +103,36 @@ const BookPage = () => {
             </div>
             <div className="p-4">
               <h2 className="text-xl font-semibold mb-4 dark:text-white">Trending Book of {author?.name}</h2>
-              <div class="container mx-auto">
-                <div class="flex flex-wrap -mx-4">
+              <div className="container mx-auto">
+                <div className="flex flex-wrap -mx-4">
                   {author?.books.map((book) => (
-                    <div class="w-full sm:w-1/2 md:w-1/2 xl:w-1/4 p-4 flex">
-                      <Link href={`/book/${book.slug}/${book.uuid}`} class="c-card block bg-white shadow-md hover:shadow-xl rounded-lg overflow-hidden">
-                        <div class="relative pb-48 overflow-hidden">
+                    <div className="w-full sm:w-1/2 md:w-1/2 xl:w-1/4 p-4 flex">
+                      <Link href={`/book/${book.slug}/${book.uuid}`} className="c-card block bg-white shadow-md hover:shadow-xl rounded-lg overflow-hidden">
+                        <div className="relative pb-48 overflow-hidden">
                           <Image
                             src={`https://books.google.com/books/content?id=${book.book_uid}&printsec=frontcover&img=1&zoom=0&edge=curl&source=gbs_api`}
                             alt={book.title}
-                            class="absolute inset-0 h-full w-full object-cover"
+                            className="absolute inset-0 h-full w-full object-cover"
                             layout="fill"
                             objectFit="cover"
                           />
                         </div>
-                        <div class="p-4">
-                          <span class="inline-block px-2 py-1 leading-none bg-orange-200 text-orange-800 rounded-full font-semibold uppercase tracking-wide text-xs">Views : {book.views}</span>
-                          <h2 class="mt-2 mb-2  font-bold">{convertToTitleCase(book.title)}</h2>
+                        <div className="p-4">
+                          <span className="inline-block px-2 py-1 leading-none bg-orange-200 text-orange-800 rounded-full font-semibold uppercase tracking-wide text-xs">Views : {book.views}</span>
+                          <h2 className="mt-2 mb-2  font-bold">{convertToTitleCase(book.title)}</h2>
                           {book.subtitle && (
-                            <p class="text-sm">{convertToTitleCase(book.subtitle)}</p>
+                            <p className="text-sm">{convertToTitleCase(book.subtitle)}</p>
                           )}
                         </div>
-                        <div class="p-4 border-t border-b text-xs text-gray-700">
-                          <span class="flex items-center mb-1">
+                        <div className="p-4 border-t border-b text-xs text-gray-700">
+                          <span className="flex items-center mb-1">
                             {book.description && (
                               <p className="text-sm text-justify overflow-hidden overflow-ellipsis line-clamp-3" dangerouslySetInnerHTML={{ __html: book?.description }}></p>
                             )}
                           </span>
                         </div>
-                        {/* <div class="p-4 flex items-center text-sm text-gray-600">
-                            <span class="ml-2">34 Bewertungen</span>
+                        {/* <div className="p-4 flex items-center text-sm text-gray-600">
+                            <span className="ml-2">34 Bewertungen</span>
                           </div> */}
                       </Link>
                     </div>

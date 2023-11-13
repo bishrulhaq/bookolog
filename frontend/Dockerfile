@@ -1,5 +1,5 @@
 # Use the official Node.js image as the base image
-FROM node:18.15.0-alpine
+FROM node:18.17.0-alpine
 
 # Set the working directory in the container to /app
 RUN apk add --no-cache libc6-compat
