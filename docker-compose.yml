@@ -51,6 +51,7 @@ services:
       - APP_ENV=development
       - CHOKIDAR_USEPOLLING=true
       - WATCHPACK_POLLING=true
+      - NEXTAUTH_SECRET=sdfsdfdsfsdf3234sfsdfg
     volumes:
       - ./frontend:/app/frontend
       - /app/frontend/node_modules

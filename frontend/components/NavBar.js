@@ -2,11 +2,13 @@
 import React, { useState } from 'react';
 import Link from 'next/link';
 import ThemeChanger from '@/components/ThemeChanger';
+import { useSession, signIn, signOut } from "next-auth/react"
 
 const NavBar = () => {
 
   const [mainMenuOpen, setMainMenuOpen] = useState(false);
   const [userMenuOpen, setUserMenuOpen] = useState(false);
+  const { data: session } = useSession()
 
 
   const toggleMenu = (menu) => {
@@ -198,13 +200,27 @@ const NavBar = () => {
                 </div>
 
                 <div>
-                  <Link
-                    href="/login"
-                    className="flex flex-row items-center px-3 py-2 ml-4 text-sm font-medium text-gray-300 rounded-md hover:text-white hover:bg-gray-700 focus:outline-none focus:text-white focus:bg-gray-700"
-                  >
-                    <svg className="w-4 h-4 feather feather-file" viewBox="0 0 24.00 24.00" fill="none" xmlns="http://www.w3.org/2000/svg" stroke="#ffffff"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <path d="M5 21C5 17.134 8.13401 14 12 14C15.866 14 19 17.134 19 21M16 7C16 9.20914 14.2091 11 12 11C9.79086 11 8 9.20914 8 7C8 4.79086 9.79086 3 12 3C14.2091 3 16 4.79086 16 7Z" stroke="#ffffff" stroke-width="1.608" stroke-linecap="round" stroke-linejoin="round"></path> </g></svg>
-                    <span className="ml-2">Login</span>
-                  </Link>
+                  {
+                    session ? (
+
+                      <div
+                        onClick={() => signOut()}
+                        className="flex flex-row items-center px-3 py-2 ml-4 text-sm font-medium text-gray-300 rounded-md hover:text-white hover:bg-gray-700 focus:outline-none focus:text-white focus:bg-gray-700"
+                      >
+                        <svg className="w-4 h-4 feather feather-file" viewBox="0 0 24.00 24.00" fill="none" xmlns="http://www.w3.org/2000/svg" stroke="#ffffff"><g id="SVGRepo_bgCarrier" strokeWidth="0"></g><g id="SVGRepo_tracerCarrier" strokeLinecap="round" strokeLinejoin="round"></g><g id="SVGRepo_iconCarrier"> <path d="M5 21C5 17.134 8.13401 14 12 14C15.866 14 19 17.134 19 21M16 7C16 9.20914 14.2091 11 12 11C9.79086 11 8 9.20914 8 7C8 4.79086 9.79086 3 12 3C14.2091 3 16 4.79086 16 7Z" stroke="#ffffff" strokeWidth="1.608" strokeLinecap="round" strokeLinejoin="round"></path> </g></svg>
+                        <span className="ml-2">Logout</span>
+                      </div>
+                    ) : (
+                      <Link
+                        href="/login"
+                        className="flex flex-row items-center px-3 py-2 ml-4 text-sm font-medium text-gray-300 rounded-md hover:text-white hover:bg-gray-700 focus:outline-none focus:text-white focus:bg-gray-700"
+                      >
+                        <svg className="w-4 h-4 feather feather-file" viewBox="0 0 24.00 24.00" fill="none" xmlns="http://www.w3.org/2000/svg" stroke="#ffffff"><g id="SVGRepo_bgCarrier" strokeWidth="0"></g><g id="SVGRepo_tracerCarrier" strokeLinecap="round" strokeLinejoin="round"></g><g id="SVGRepo_iconCarrier"> <path d="M5 21C5 17.134 8.13401 14 12 14C15.866 14 19 17.134 19 21M16 7C16 9.20914 14.2091 11 12 11C9.79086 11 8 9.20914 8 7C8 4.79086 9.79086 3 12 3C14.2091 3 16 4.79086 16 7Z" stroke="#ffffff" strokeWidth="1.608" strokeLinecap="round" strokeLinejoin="round"></path> </g></svg>
+                        <span className="ml-2">Log In</span>
+                      </Link>
+                    )
+                  }
+
                 </div>
                 <div>
                   <ThemeChanger></ThemeChanger>
@@ -379,12 +395,6 @@ const NavBar = () => {
                   className="block px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-100 hover:text-gray-900"
                 >
                   Settings
-                </Link>
-                <Link
-                  href="#"
-                  className="block px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-100 hover:text-gray-900"
-                >
-                  Logout
                 </Link>
               </div>
             </div>

@@ -3,13 +3,13 @@ import Breadcrumbs from "@/components/Breadcrumbs";
 import FeaturedBooks from "@/components/HomePage/FeaturedBooks";
 import TrendingBooks from "@/components/HomePage/TrendingBooks";
 
-
 export const metadata = {
   title: 'Home | Bookolog',
   description: 'An online destination for discovering, exploring, and finding the perfect books to read.',
 }
 
-export default function Homepage() {
+export default async function Homepage() {
+
 
   return (
     <div className="mx-auto max-w-screen-xl">

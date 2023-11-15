@@ -1,28 +1,39 @@
 "use client"
 
 import Image from "next/image";
-import { useFormState, useFormStatus } from 'react-dom'
-import { createAccount } from "./actions";
+import { useFormStatus } from 'react-dom'
+import { signIn } from "next-auth/react";
 import Link from "next/link";
-
-const initialState = {
-    message: '',
-    error: ''
-}
+import { useRouter } from "next/navigation";
 
 function SubmitButton() {
     const status = useFormStatus();
     return (
-        <button disabled={status.pending}
+        <button
             className="py-2 px-5 bg-white border rounded-xl hover:scale-110 duration-300 dark:text-white dark:bg-gray-800">
-            Log In
+            {status.pending ? 'Loading' : 'Log In'}
         </button>
     )
 }
 
 export default function RegisterPage() {
 
-    const [state, formAction] = useFormState(createAccount, initialState);
+    const router = useRouter();
+    const authorizeAccount = async (formData) => {
+
+        const res = await signIn('credentials', {
+            redirect: false,
+            email: formData.get("email"),
+            password: formData.get("password"),
+            callbackUrl: "/club",
+        });
+
+        if (!res?.error) {
+            router.push("/club");
+        } else {
+            setError("invalid email or password");
+        }
+    }
 
     return (
         <>
@@ -33,7 +44,7 @@ export default function RegisterPage() {
                         <h2 className="font-bold text-2xl text-[#002D74] dark:text-white">Login</h2>
                         <p className="text-xs mt-4 text-[#002D74] dark:text-white">If you are already a member, easily log in</p>
 
-                        <form action="" className="flex flex-col gap-4">
+                        <form action={authorizeAccount} className="flex flex-col gap-4">
                             <input className="p-2 mt-8 rounded-xl border" type="email" name="email" placeholder="Email" />
                             <div className="relative">
                                 <input className="p-2 rounded-xl border w-full" type="password" name="password" placeholder="Password" />
@@ -42,7 +53,7 @@ export default function RegisterPage() {
                                     <path d="M8 5.5a2.5 2.5 0 1 0 0 5 2.5 2.5 0 0 0 0-5zM4.5 8a3.5 3.5 0 1 1 7 0 3.5 3.5 0 0 1-7 0z" />
                                 </svg>
                             </div>
-                            <button className="bg-[#002D74] rounded-xl text-white py-2 hover:scale-105 duration-300">Login</button>
+                            <SubmitButton />
                         </form>
 
                         <div className="mt-6 grid grid-cols-3 items-center text-gray-400">

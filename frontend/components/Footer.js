@@ -1,6 +1,7 @@
 const Footer = () => {
   return (
-    <footer className="bg-gray-100 dark:bg-gray-800 py-8 sm:py-12 dark:text-white">
+    <footer className="min-h-screen">
+      <div className="sticky top-[100vh] justify-between bg-gray-100 dark:bg-gray-800 py-5 dark:text-white">
       <div className="container mx-auto lg:px-15 md:px-10 px-5">
         <div className="sm:flex sm:flex-wrap sm:-mx-4 md:py-4 justify-center">
           <div className="px-5 sm:w-1/2 md:w-1/4 xl:w-1/6">
@@ -110,6 +111,7 @@ const Footer = () => {
             <button className="px-4 py-2 bg-purple-800 hover:bg-purple-900 rounded text-white">Get Started</button>
           </div>
         </div>
+      </div>
       </div>
     </footer>
   )

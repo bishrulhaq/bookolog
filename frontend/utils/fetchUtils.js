@@ -203,17 +203,13 @@ export async function fetchRegister(credentials) {
     }
 }
 
-export async function fetchLogin(credentials) {
+export async function fetchAuthorize(credentials) {
 
-    return fetch(`${uri}/auth/login`, {
+    return fetch(`http://backend:4000/auth/authorize`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(credentials)
     }).then((response) => {
-        
-        if (!response.ok) {
-            throw new Error('Network response was not ok');
-        }
 
         return response.json();
     }).catch((error) => {

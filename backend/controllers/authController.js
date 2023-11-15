@@ -5,25 +5,31 @@ const registerValidation = require('../validations/registerValidation');
 
 const authController = {
 
-    login: async (req, res) => {
+    authorize: async (req, res) => {
 
         const { email, password } = req.body;
 
         try {
-            const user = await user.findOne({ where: { email } });
+            const existingUser = await user.findOne({ where: { email } });
 
-            if (user && bcrypt.compareSync(password, user.password)) {
-                const token = jwt.sign({ id: user.id, email: user.email }, 'your-secret-key', {
-                    expiresIn: '1h',
-                });
+            if (existingUser && bcrypt.compareSync(password, existingUser.password)) {
 
-                res.json({ token });
+                // const token = jwt.sign({ id: user.id, email: user.email }, process.env.JWT_TOKEN, {
+                //     expiresIn: '1h',
+                // });
+
+                const { id, email, first_name, last_name } = existingUser;
+
+                res.status(200).json({ status: 200, message: 'Authorization Successful', data: { id, email, first_name, last_name } });
+
             } else {
-                res.status(401).json({ error: 'Invalid credentials' });
+                res.status(401).json({ status: 401, message: 'Invalid credentials' });
             }
+
+
+
         } catch (error) {
-            console.error(error);
-            res.status(500).json({ error: 'Internal server error' });
+            res.status(500).json({ status: 500, message: 'Internal server error' });
         }
 
     },
