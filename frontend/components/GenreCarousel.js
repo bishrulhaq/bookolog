@@ -84,7 +84,7 @@ const GenreCarousel = () => {
         </div>
       </div>) :
         data.length !== 0 && (
-          <div className="mx-auto px-4 pb-2 pt-4 md:px-8 transition-all duration-500 ease-linear">
+          <div className="px-4 pb-2 mx-auto max-w-screen-xl pt-4 md:px-8 transition-all duration-500 ease-linear">
             <div className="relative">
               <div ref={slidesContainerRef} className="slides-container flex snap-x snap-mandatory overflow-hidden overflow-x-auto space-x-2 rounded scroll-smooth">
                 {data.map((item, index) => (

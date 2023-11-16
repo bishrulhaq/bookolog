@@ -1,7 +1,8 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  darkMode: 'class',
   experimental: {
-    outputStandalone: true,
+    serverActions: true,
   },
   theme: {
     typography: (theme) => ({}),
@@ -19,6 +20,7 @@ const nextConfig = {
   },
   env: {
     APP_ENV: process.env.APP_ENV,
+    NEXTAUTH_SECRET: process.env.NEXTAUTH_SECRET,
   }
 }
 

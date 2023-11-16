@@ -1,12 +1,27 @@
-const { DataTypes } = require('sequelize');
-const sequelize = require('../config/db');
+module.exports = function (sequelize, DataTypes) {
+  const authorBookJoin = sequelize.define('authorBookJoin', {
+    id: {
+      type: DataTypes.INTEGER,
+      primaryKey: true,
+      autoIncrement: true,
+    },
+    book_id: {
+      type: DataTypes.INTEGER,
+      references: {
+        model: 'book',
+        key: 'id',
+      },
+    },
+    author_id: {
+      type: DataTypes.INTEGER,
+      references: {
+        model: 'author',
+        key: 'id',
+      },
+    },
+  }, {
+    tableName: 'authorBookJoin',
+  });
 
-const authorBookJoin = sequelize.define('authorBookJoin',{
-  id: {
-    type: DataTypes.INTEGER,
-    primaryKey: true,
-    autoIncrement: true,
-  },
-});
-
-module.exports = authorBookJoin;
+  return authorBookJoin;
+};

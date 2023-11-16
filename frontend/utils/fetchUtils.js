@@ -1,20 +1,18 @@
 
+import { NextResponse } from 'next/server'
+
 const uri = process.env.APP_ENV === 'development' ? 'http://localhost:4000/api' : 'https://bookolog.com/api';
 
-export async function fetchBooks() {
-    return fetch(`${uri}/book`).then((response) => {
+export async function fetchBooks(page, limit) {
+    return fetch(`${uri}/book?page=${page || 1}&limit=${limit || 20}`).then((response) => {
         if (!response.ok) {
             throw new Error('Network response was not ok');
         }
         return response.json();
-    })
-        .then((data) => {
-            return data;
-        })
-        .catch((error) => {
-            console.error('Error:', error);
-            throw error;
-        });
+    }).catch((error) => {
+        console.error('Error:', error);
+        throw error;
+    });
 }
 
 export async function fetchFeaturedBooks() {
@@ -169,8 +167,6 @@ export async function fetchHomeScreenGenres() {
         });
 }
 
-
-
 export async function fetchAllGenres() {
 
     return fetch(`${uri}/category/all`).then((response) => {
@@ -188,6 +184,36 @@ export async function fetchAllGenres() {
         });
 }
 
+export async function fetchRegister(credentials) {
+    try {
+        const response = await fetch(`http://backend:4000/auth/register`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(credentials),
+        });
+
+        return response.json();
+    } catch (error) {
+        console.error('Error:', error.message);
+        throw error;
+    }
+}
+
+export async function fetchAuthorize(credentials) {
+
+    return fetch(`http://backend:4000/auth/authorize`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(credentials)
+    }).then((response) => {
+
+        return response.json();
+    }).catch((error) => {
+        console.error('Error:', error);
+        throw error;
+    });
+
+}
 
 export async function fetchBookById(getByd) {
 

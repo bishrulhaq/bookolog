@@ -29,7 +29,12 @@ services:
       MYSQL_ROOT_PASSWORD: SJFHFIHJGH673
       MYSQL_DATABASE: bookolog
     volumes:
-      - mariadb_data:/var/lib/mysql  
+      - mariadb_data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mariadb-admin", "-usequelize_test", "-psequelize_test", "status"]
+      interval: 3s
+      timeout: 1s
+      retries: 10  
     ports:
       - "3306:3306"
     networks:
@@ -46,6 +51,7 @@ services:
       - APP_ENV=development
       - CHOKIDAR_USEPOLLING=true
       - WATCHPACK_POLLING=true
+      - NEXTAUTH_SECRET=sdfsdfdsfsdf3234sfsdfg
     volumes:
       - ./frontend:/app/frontend
       - /app/frontend/node_modules

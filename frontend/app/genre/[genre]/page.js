@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'next/navigation'
-import { fetchBooksByGenre, removeHyphensAndTitleCase, convertToTitleCase } from '@/utils';
+import { fetchBooksByGenre, removeHyphensAndTitleCase, sanitizedUri, convertToTitleCase } from '@/utils';
 import Link from 'next/link';
 import Image from 'next/image';
 
@@ -44,7 +44,7 @@ const GenreByTitle = () => {
       C22.32,8.481,24.301,9.057,26.013,10.047z">
                                 <animateTransform attributeType="xml"
                                     attributeName="transform"
-                                    type="rotate"
+                                    type="rotate"   
                                     from="0 20 20"
                                     to="360 20 20"
                                     dur="0.5s"
@@ -52,7 +52,7 @@ const GenreByTitle = () => {
                             </path>
                         </svg>
                     </div>
-                ) : books.length !== 0 ? (
+                ) : books && books.length !== 0 ? (
                     <>
                         <h2 className="md:text-2xl lg:text-3xl font-bold bg-clip-text text-transparent bg-gradient-to-br from-blue-600 to-purple-800 text-center b-shadow mb-5 md:py-4 py-2">
                             Books in the {genreName} Genre
@@ -77,7 +77,7 @@ const GenreByTitle = () => {
                                                     <span key={index}>
                                                         {author.key ? (
                                                             <a
-                                                                href={`/author/${author.key}`}
+                                                                href={`/author/${sanitizedUri(author.name)}/${author.k_id}`}
                                                                 className="text-blue-500 hover:text-blue-600 dark:hover:text-blue-400"
                                                             >
                                                                 {convertToTitleCase(author.name)}
@@ -99,7 +99,7 @@ const GenreByTitle = () => {
 
                                     <Link href={`/book/${book.slug}/${book.uuid}`} className="flex justify-center pb-2">
                                         <button type="button" className="text-white bg-gradient-to-r from-blue-500 via-blue-600 to-blue-700 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 shadow-lg shadow-blue-500/50 dark:shadow-lg dark:shadow-blue-800/80 font-medium rounded-lg text-sm px-5 py-2.5 text-center mr-2 mb-2 ">
-                                            Learn More
+                                            View
                                         </button>
                                     </Link>
 
