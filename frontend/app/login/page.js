@@ -1,7 +1,7 @@
 "use client"
 
 import Image from "next/image";
-import { useFormStatus } from 'react-dom'
+import { experimental_useFormStatus as useFormStatus } from 'react-dom'
 import { signIn } from "next-auth/react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";

@@ -9,14 +9,10 @@ export async function fetchBooks(page, limit) {
             throw new Error('Network response was not ok');
         }
         return response.json();
-    })
-        .then((data) => {
-            return data;
-        })
-        .catch((error) => {
-            console.error('Error:', error);
-            throw error;
-        });
+    }).catch((error) => {
+        console.error('Error:', error);
+        throw error;
+    });
 }
 
 export async function fetchFeaturedBooks() {

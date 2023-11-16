@@ -2,26 +2,26 @@
 
 import { fetchBooks, convertToTitleCase, sanitizedUri } from '@/utils';
 import { useEffect, useState } from 'react';
+import { useSearchParams, useRouter } from 'next/navigation'
 import Image from 'next/image';
 import Link from 'next/link';
-import { useSearchParams, useRouter } from 'next/navigation'
 
 export default function BooksPage() {
-  const [books, setBook] = useState([]);
-  const [isLoading, setIsLoading] = useState(true);
-  const [total, setTotal] = useState(1);
+
   const router = useRouter();
-
-  const searchParams = useSearchParams()
-
+  const searchParams = useSearchParams();
   const page = searchParams.get('page') ?? 1;
   const limit = 20;
+  const [isLoading, setIsLoading] = useState(true);
 
+  const [books, setBook] = useState([]);
+  const [total, setTotal] = useState(1);
 
   useEffect(() => {
+
     const fetchData = async () => {
       try {
-        const { total, books } = await fetchBooks(page || 1, limit);
+        const { total, books } = await fetchBooks(page, limit);
         setTotal(total);
         setBook(books);
         setIsLoading(false);
@@ -37,7 +37,7 @@ export default function BooksPage() {
 
   return (
     <div className="flex justify-center items-center py-2">
-      <div className="p-6 rounded-lg">
+      <div className="p-6">
         {isLoading ? (
           <div className="text-center">
             <svg width="100" height="30" viewBox="0 0 120 30" xmlns="http://www.w3.org/2000/svg" fill="#fff">
@@ -46,17 +46,17 @@ export default function BooksPage() {
                   begin="0s" dur="0.8s"
                   values="15;9;15" calcMode="linear"
                   repeatCount="indefinite" />
-                <animate attributeName="fill-opacity" from="1" to="1"
+                <animate attributeName="fillOpacity" from="1" to="1"
                   begin="0s" dur="0.8s"
                   values="1;.5;1" calcMode="linear"
                   repeatCount="indefinite" />
               </circle>
-              <circle cx="60" cy="15" r="9" fill-opacity="0.3">
+              <circle cx="60" cy="15" r="9" fillOpacity="0.3">
                 <animate attributeName="r" from="9" to="9"
                   begin="0s" dur="0.8s"
                   values="9;15;9" calcMode="linear"
                   repeatCount="indefinite" />
-                <animate attributeName="fill-opacity" from="0.5" to="0.5"
+                <animate attributeName="fillOpacity" from="0.5" to="0.5"
                   begin="0s" dur="0.8s"
                   values=".5;1;.5" calcMode="linear"
                   repeatCount="indefinite" />
@@ -66,14 +66,14 @@ export default function BooksPage() {
                   begin="0s" dur="0.8s"
                   values="15;9;15" calcMode="linear"
                   repeatCount="indefinite" />
-                <animate attributeName="fill-opacity" from="1" to="1"
+                <animate attributeName="fillOpacity" from="1" to="1"
                   begin="0s" dur="0.8s"
                   values="1;.5;1" calcMode="linear"
                   repeatCount="indefinite" />
               </circle>
             </svg>
           </div>
-        ) : books.length !== 0 ? (
+        ) : books && books.length !== 0 ? (
           <>
             <h2 className="md:text-2xl lg:text-3xl font-bold bg-clip-text text-transparent bg-gradient-to-br from-blue-600 to-purple-800 text-center b-shadow mb-5 md:py-4 py-2">
               Books in the Library
@@ -127,29 +127,27 @@ export default function BooksPage() {
               ))}
             </div>
             <div className="flex justify-center items-center mt-10">
-              {books.length !== 0 && (
-                <div class="flex flex-col items-center">
-                  <span class="text-sm text-gray-700 dark:text-gray-400">
-                    Showing <span class="font-semibold text-gray-900 dark:text-white">{page || 1}</span> to <span class="font-semibold text-gray-900 dark:text-white">{Math.ceil(total / limit)}</span> of <span class="font-semibold text-gray-900 dark:text-white">{total}</span> Entries
-                  </span>
-                  <div class="inline-flex mt-2 xs:mt-0">
-                    <button onClick={() => router.push(`/books?page=${parseInt(page || 1) - 1}`)}
-                      disabled={parseInt(page || 1) === 1} class="flex items-center justify-center px-3 h-8 text-sm font-medium text-gray-800 dark:text-white dark:bg-gray-800 bg-gray-200 rounded-s hover:bg-gray-900  dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 hover:text-white">
-                      <svg class="w-3.5 h-3.5 me-2 rtl:rotate-180" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 10">
-                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 5H1m0 0 4 4M1 5l4-4" />
-                      </svg>
-                      Prev
-                    </button>
-                    <button onClick={() => router.push(`/books?page=${parseInt(page || 1) + 1}`)}
-                      disabled={parseInt(page || 1) === Math.ceil(total / limit)} class="flex items-center justify-center px-3 h-8 text-sm font-medium  text-gray-800 dark:text-white dark:bg-gray-800 bg-gray-200 border-0 border-s border-gray-700 rounded-e hover:bg-gray-900 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 hover:text-white">
-                      Next
-                      <svg class="w-3.5 h-3.5 ms-2 rtl:rotate-180" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 10">
-                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M1 5h12m0 0L9 1m4 4L9 9" />
-                      </svg>
-                    </button>
-                  </div>
+              <div className="flex flex-col items-center">
+                <span className="text-sm text-gray-700 dark:text-gray-400">
+                  Showing <span className="font-semibold text-gray-900 dark:text-white">{page || 1}</span> to <span className="font-semibold text-gray-900 dark:text-white">{Math.ceil(total / limit)}</span> of <span className="font-semibold text-gray-900 dark:text-white">{total}</span> Entries
+                </span>
+                <div className="inline-flex mt-2 xs:mt-0">
+                  <button onClick={() => router.push(`/books?page=${parseInt(page || 1) - 1}`)}
+                    disabled={parseInt(page || 1) === 1} className="flex items-center justify-center px-3 h-8 text-sm font-medium text-gray-800 dark:text-white dark:bg-gray-800 bg-gray-200 rounded-s hover:bg-gray-900  dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 hover:text-white">
+                    <svg className="w-3.5 h-3.5 me-2 rtl:rotate-180" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 10">
+                      <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 5H1m0 0 4 4M1 5l4-4" />
+                    </svg>
+                    Prev
+                  </button>
+                  <button onClick={() => router.push(`/books?page=${parseInt(page || 1) + 1}`)}
+                    disabled={parseInt(page || 1) === Math.ceil(total / limit)} className="flex items-center justify-center px-3 h-8 text-sm font-medium  text-gray-800 dark:text-white dark:bg-gray-800 bg-gray-200 border-0 border-s border-gray-700 rounded-e hover:bg-gray-900 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 hover:text-white">
+                    Next
+                    <svg className="w-3.5 h-3.5 ms-2 rtl:rotate-180" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 10">
+                      <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M1 5h12m0 0L9 1m4 4L9 9" />
+                    </svg>
+                  </button>
                 </div>
-              )}
+              </div>
             </div>
           </>
         ) : (

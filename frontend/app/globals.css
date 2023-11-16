@@ -12,13 +12,8 @@
 
 [data-theme='dark'] {
   transition: all 0.3s ease-in-out;
-  --background: black;
+  --background: rgb(31 41 55);
   --foreground: white;
-}
-
-body {
-  font-family: 'Montserrat', sans-serif !important;
-  font-family: 'Poppins', sans-serif !important;
 }
 
 body {
@@ -35,9 +30,7 @@ body {
 
 .slides-container {
   -ms-overflow-style: none;
-  /* Internet Explorer 10+ */
   scrollbar-width: none;
-  /* Firefox */
 }
 
 .slides-container::-webkit-scrollbar {

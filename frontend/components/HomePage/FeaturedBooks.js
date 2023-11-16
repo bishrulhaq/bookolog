@@ -59,7 +59,7 @@ const FeaturedBooks = () => {
                             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 b-shadow">
                                 {featuredBooks.map((book) => (
                                     <div key={book.id} className="bg-white rounded-lg shadow-lg flex flex-col">
-                                        <div className="relative h-[400px] rounded-t-lg overflow-hidden">
+                                        <div className="relative h-[350px] rounded-t-lg overflow-hidden">
                                             <Image
                                                 src={`https://books.google.com/books/content?id=${book.book_uid}&printsec=frontcover&img=1&zoom=0&edge=curl&source=gbs_api`}
                                                 alt={book.title}
@@ -97,7 +97,7 @@ const FeaturedBooks = () => {
 
                                         <Link href={`/book/${book.slug}/${book.uuid}`} className="flex justify-center pb-2">
                                             <button type="button" className="text-white bg-gradient-to-r from-blue-500 via-blue-600 to-blue-700 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 shadow-lg shadow-blue-500/50 dark:shadow-lg dark:shadow-blue-800/80 font-medium rounded-lg text-sm px-5 py-2.5 text-center mr-2 mb-2 ">
-                                                Learn More
+                                                View
                                             </button>
                                         </Link>
 
