@@ -11,7 +11,7 @@ export default function RootLayout({ children, session }) {
   return (
     <html lang="en" suppressHydrationWarning>
       <link rel="icon" href="/favicon.ico" sizes="any" />
-      <body>
+      <body className='min-h-screen'>
         <SessionProvider session={session}>
           <Provider>
             <Header />

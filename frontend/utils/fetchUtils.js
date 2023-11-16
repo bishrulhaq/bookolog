@@ -3,8 +3,8 @@ import { NextResponse } from 'next/server'
 
 const uri = process.env.APP_ENV === 'development' ? 'http://localhost:4000/api' : 'https://bookolog.com/api';
 
-export async function fetchBooks() {
-    return fetch(`${uri}/book`).then((response) => {
+export async function fetchBooks(page, limit) {
+    return fetch(`${uri}/book?page=${page || 1}&limit=${limit || 20}`).then((response) => {
         if (!response.ok) {
             throw new Error('Network response was not ok');
         }

@@ -36,7 +36,7 @@ const BookPage = () => {
 
 
   return (
-    <div className="flex mx-auto justify-center items-center py-2">
+    <div className="mx-auto max-w-screen-xl justify-center items-center py-2 px-10">
 
       {isLoading ? (
         <div className="text-center">
@@ -75,7 +75,7 @@ const BookPage = () => {
         </div>
       ) : author.length !== 0 ? (
         <>
-          <div classNameName="max-w-3xl mx-auto rounded-lg shadow-lg lg:flex">
+          <div >
             <div className="p-4">
               {/* <img src="author-image.jpg" alt="Author Name" className="w-32 h-32 rounded-full mx-auto mb-4"> */}
               <h1 className="text-2xl font-semibold text-center dark:text-white">{author?.name}</h1>

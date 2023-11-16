@@ -4,16 +4,25 @@ import { fetchBooks, convertToTitleCase, sanitizedUri } from '@/utils';
 import { useEffect, useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
+import { useSearchParams, useRouter } from 'next/navigation'
 
 export default function BooksPage() {
   const [books, setBook] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [total, setTotal] = useState(1);
+  const router = useRouter();
+
+  const searchParams = useSearchParams()
+
+  const page = searchParams.get('page') ?? 1;
+  const limit = 20;
+
 
   useEffect(() => {
-
     const fetchData = async () => {
       try {
-        const books = await fetchBooks();
+        const { total, books } = await fetchBooks(page || 1, limit);
+        setTotal(total);
         setBook(books);
         setIsLoading(false);
       } catch (error) {
@@ -23,8 +32,7 @@ export default function BooksPage() {
     };
 
     fetchData();
-
-  }, []);
+  }, [page]);
 
 
   return (
@@ -68,7 +76,7 @@ export default function BooksPage() {
         ) : books.length !== 0 ? (
           <>
             <h2 className="md:text-2xl lg:text-3xl font-bold bg-clip-text text-transparent bg-gradient-to-br from-blue-600 to-purple-800 text-center b-shadow mb-5 md:py-4 py-2">
-              Books in the Library	
+              Books in the Library
             </h2>
             <div className="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-3 lg:grid-cols-4 mx-auto max-w-screen-xl gap-8 px-4 b-shadow">
               {books.map((book) => (
@@ -110,18 +118,43 @@ export default function BooksPage() {
                   </div>
 
                   <Link href={`/book/${book.slug}/${book.uuid}`} className="flex justify-center pb-2">
-                    <button type="button" className="text-white bg-gradient-to-r from-blue-500 via-blue-600 to-blue-700 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 shadow-lg shadow-blue-500/50 dark:shadow-lg dark:shadow-blue-800/80 font-medium rounded-lg text-sm px-5 py-2.5 text-center mr-2 mb-2 ">
-                      Learn More
+                    <button type="button" className="text-white bg-gradient-to-r from-blue-500 via-blue-600 to-blue-700 hover:bg-gradient-to-br shadow-lg shadow-blue-500/50 dark:shadow-lg dark:shadow-blue-800/80 font-medium rounded-lg text-sm px-5 py-2.5 text-center mr-2 mb-2 ">
+                      View
                     </button>
                   </Link>
 
                 </div>
               ))}
             </div>
+            <div className="flex justify-center items-center mt-10">
+              {books.length !== 0 && (
+                <div class="flex flex-col items-center">
+                  <span class="text-sm text-gray-700 dark:text-gray-400">
+                    Showing <span class="font-semibold text-gray-900 dark:text-white">{page || 1}</span> to <span class="font-semibold text-gray-900 dark:text-white">{Math.ceil(total / limit)}</span> of <span class="font-semibold text-gray-900 dark:text-white">{total}</span> Entries
+                  </span>
+                  <div class="inline-flex mt-2 xs:mt-0">
+                    <button onClick={() => router.push(`/books?page=${parseInt(page || 1) - 1}`)}
+                      disabled={parseInt(page || 1) === 1} class="flex items-center justify-center px-3 h-8 text-sm font-medium text-gray-800 dark:text-white dark:bg-gray-800 bg-gray-200 rounded-s hover:bg-gray-900  dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 hover:text-white">
+                      <svg class="w-3.5 h-3.5 me-2 rtl:rotate-180" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 10">
+                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 5H1m0 0 4 4M1 5l4-4" />
+                      </svg>
+                      Prev
+                    </button>
+                    <button onClick={() => router.push(`/books?page=${parseInt(page || 1) + 1}`)}
+                      disabled={parseInt(page || 1) === Math.ceil(total / limit)} class="flex items-center justify-center px-3 h-8 text-sm font-medium  text-gray-800 dark:text-white dark:bg-gray-800 bg-gray-200 border-0 border-s border-gray-700 rounded-e hover:bg-gray-900 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 hover:text-white">
+                      Next
+                      <svg class="w-3.5 h-3.5 ms-2 rtl:rotate-180" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 10">
+                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M1 5h12m0 0L9 1m4 4L9 9" />
+                      </svg>
+                    </button>
+                  </div>
+                </div>
+              )}
+            </div>
           </>
         ) : (
           <h2 className="md:text-2xl lg:text-3xl font-bold bg-clip-text text-transparent bg-gradient-to-br from-blue-600 to-purple-800 text-center b-shadow mb-5 md:py-4 py-2">
-            No Results Found for {genreName} Genre
+            No Results Found!
           </h2>
         )}
       </div>

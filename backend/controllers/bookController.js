@@ -7,11 +7,16 @@ const { logger, sanitizedUri, encrypt, decrypt } = require('../helpers/utils');
 const bookController = {
   getAll: async (req, res) => {
     try {
-      const books = await book.findAll({
+      const { page = 1, limit = 24 } = req.query;
+      const offset = (page - 1) * limit;
+
+      const { count, rows: books } = await book.findAndCountAll({
         order: [['updatedAt', 'DESC']],
-        limit: 24,
+        limit: parseInt(limit),
+        offset: parseInt(offset),
       });
-      res.json(books);
+
+      res.json({ total: count, books });
     } catch (error) {
       console.error(error);
       res.status(500).json({ error: 'An error occurred' });

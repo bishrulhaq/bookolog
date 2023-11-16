@@ -2,6 +2,7 @@ import Carousel from "@/components/Carousel";
 import Breadcrumbs from "@/components/Breadcrumbs";
 import FeaturedBooks from "@/components/HomePage/FeaturedBooks";
 import TrendingBooks from "@/components/HomePage/TrendingBooks";
+import Link from "next/link";
 
 export const metadata = {
   title: 'Home | Bookolog',
@@ -34,12 +35,12 @@ export default async function Homepage() {
           <h1 className="text-gray-900 dark:text-white text-3xl md:text-5xl font-extrabold py-2">Yo!,</h1>
           <h2 className="text-gray-900 dark:text-white text-2xl md:text-4xl font-bold py-2">Explore, and get connected with fellow book readers!</h2>
           <p className="text-lg font-normal text-gray-500 dark:text-gray-400 mb-6">A platform dedicated for the bookaholics.</p>
-          <a href="#" className="inline-flex justify-center items-center py-2.5 px-5 text-base font-medium text-center text-white rounded-lg bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 dark:focus:ring-blue-900">
+          <Link href="/register" className="inline-flex justify-center items-center py-2.5 px-5 text-base font-medium text-center text-white rounded-lg bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 dark:focus:ring-blue-900">
             Sign up
             <svg className="w-3.5 h-3.5 ml-2" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 10">
               <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M1 5h12m0 0L9 1m4 4L9 9" />
             </svg>
-          </a>
+          </Link>
         </div>
 
         <div className="grid md:grid-cols-2 gap-8">
