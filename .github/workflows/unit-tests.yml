@@ -8,6 +8,24 @@ jobs:
   test:
     runs-on: ubuntu-latest
 
+    services:
+      mariadb:
+        image: mariadb:latest
+        env:
+          MYSQL_DATABASE: testdatabase
+          MYSQL_USER: root
+          MYSQL_PASSWORD:
+        ports:
+          - 3306:3306
+        options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3
+
+    env:
+      DB_HOST: mariadb
+      DB_USER: root
+      DB_NAME: testdatabase
+      APP_ENV: development
+      DB_DIALECT: mysql
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
@@ -16,6 +34,14 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 14
+
+      - name: Set up environment variables
+        run: |
+          echo "DB_HOST=${{ env.DB_HOST }}" >> $GITHUB_ENV
+          echo "DB_USER=${{ env.DB_USER }}" >> $GITHUB_ENV
+          echo "DB_NAME=${{ env.DB_NAME }}" >> $GITHUB_ENV
+          echo "APP_ENV=${{ env.APP_ENV }}" >> $GITHUB_ENV
+          echo "DB_DIALECT=${{ env.DB_DIALECT }}" >> $GITHUB_ENV    
 
       - name: Install dependencies
         working-directory: ./backend
