@@ -12,6 +12,7 @@ jobs:
       mariadb:
         image: mariadb:latest
         env:
+          MYSQL_ROOT_PASSWORD: test
           MYSQL_DATABASE: testdatabase
           MYSQL_USER: root
           MYSQL_PASSWORD: test
