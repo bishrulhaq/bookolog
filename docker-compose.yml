@@ -5,7 +5,7 @@ services:
     build:
       context: ./backend
       dockerfile: Dockerfile
-    image: backend:local  
+    image: backend:local
     container_name: backend
     environment:
       - CHOKIDAR_USEPOLLING=true
@@ -13,12 +13,12 @@ services:
       - ./backend:/app/backend
       - /app/backend/node_modules
     depends_on:
-      - maria-db 
+      - maria-db
     ports:
       - "4000:4000"
-    restart: unless-stopped # Restart the container unless explicitly stopped
+    restart: unless-stopped
     networks:
-      - book-explorer
+      - bookolog
 
   # MariaDB database
   maria-db:
@@ -30,22 +30,17 @@ services:
       MYSQL_DATABASE: bookolog
     volumes:
       - mariadb_data:/var/lib/mysql
-    healthcheck:
-      test: ["CMD", "mariadb-admin", "-usequelize_test", "-psequelize_test", "status"]
-      interval: 3s
-      timeout: 1s
-      retries: 10  
     ports:
-      - "3306:3306"
+      - "3310:3306"
     networks:
-      - book-explorer
+      - bookolog
 
   frontend:
     build:
       context: ./frontend
       dockerfile: Dockerfile
       network: host
-    image: frontend:local  
+    image: frontend:local
     container_name: frontend
     environment:
       - APP_ENV=development
@@ -59,15 +54,15 @@ services:
     depends_on:
       - backend
     links:
-      - backend 
+      - backend
     ports:
-      - "3000:3000" # Map the frontend application's port to a host port of your choice
+      - "3000:3000"
     restart: unless-stopped
     networks:
-      - book-explorer
+      - bookolog
 
 networks:
-  book-explorer:
+  bookolog:
     driver: bridge
 
 volumes:

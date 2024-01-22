@@ -327,4 +327,23 @@ export async function updateUser(user) {
 }
 
 
+export async function fetchInteraction(userId, bookId, interactionType, value) {
+    return fetch(`${uri}/user-book/interaction-status`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({userId, bookId, interactionType, value}),
+    }).then((response) => {
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
+        }
+        return response.json();
+    }).catch((error) => {
+        console.error('Error:', error);
+        throw error;
+    });
+}
+
+
 
