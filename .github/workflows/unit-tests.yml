@@ -12,9 +12,9 @@ jobs:
       mariadb:
         image: mariadb:latest
         env:
-          MARIADB_ROOT_PASSWORD: test
+          MARIADB_ROOT_PASSWORD: root_test
           MARIADB_DATABASE: testdatabase
-          MARIADB_USER: root
+          MARIADB_USER: test_user
           MARIADB_PASSWORD: test
         ports:
           - 3306:3306
@@ -24,7 +24,7 @@ jobs:
       DB_HOST: mariadb
       DB_USER: root
       DB_NAME: testdatabase
-      DB_PASSWORD: test
+      DB_PASSWORD: root_test
       APP_ENV: development
       DB_DIALECT: mysql
 
