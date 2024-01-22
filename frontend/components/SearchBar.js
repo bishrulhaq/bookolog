@@ -1,8 +1,9 @@
 "use client"
 import { useRouter } from 'next/navigation';
-import React, { useState, useEffect, useRef } from "react"
+import React, { useState, useEffect, useRef } from "react";
 import Link from 'next/link';
-import useDebounce from '@/components/useDebounce'
+import useDebounce from '@/components/useDebounce';
+import ThemeChanger from '@/components/ThemeChanger';
 import { fetchBooksByTitle, fetchBooksByAuthor, fetchBooksByISBN, sanitizedUri, truncateText, navigateToBook } from '@/utils';
 
 const SearchBar = () => {
@@ -125,7 +126,7 @@ const SearchBar = () => {
                 setQuery(event.target.value);
               }}
               onClick={handleSearchBarClick}
-              ref={searchBarRef} 
+              ref={searchBarRef}
               className="block lg:w-92 md:-72 z-30 text-sm px-5 py-2.5 text-gray-900 bg-gray-50 text-primary-500 placeholder-primary-200 lg:w-96 md:w-72 flex rounded-lg bg-primary-400 focus:outline-none focus:bg-gray-900" />
             <button type="submit" onClick={handleSearch} className="absolute top-0 right-0 p-2.5 h-full text-sm font-medium text-white bg-gold-500 hover:bg-gray-900 rounded-r-lg"><svg className="w-4 h-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
               <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z" />
@@ -223,9 +224,14 @@ const SearchBar = () => {
               </div>
             )}
           </div>
-        </div>
-      </div>
 
+          <div className="relative ml-2">
+            <ThemeChanger></ThemeChanger>
+          </div>
+        </div>
+
+
+      </div>
 
     </>
   );

@@ -19,26 +19,47 @@ module.exports = function (sequelize, DataTypes) {
             type: DataTypes.STRING,
             allowNull: true,
         },
+        date_of_birth: {
+            type: DataTypes.DATE,
+            allowNull: true,
+        },
         image: {
             type: DataTypes.STRING,
             allowNull: true,
         },
         provider: {
-            type: DataTypes.STRING,
+            type: DataTypes.JSON,
             allowNull: true,
         },
         password: {
             type: DataTypes.STRING,
-            allowNull: false,
+            allowNull: true,
+        },
+        gender: {
+            type: DataTypes.ENUM('male', 'female', 'other', 'prefer_not_to_say'),
+            allowNull: true,
+            validate: {
+                isIn: {
+                    args: [['male', 'female', 'prefer_not_to_say']],
+                    msg: 'Gender must be one of: male, female, prefer_not_to_say',
+                },
+            },
+        },
+        google_sub: {
+            type: DataTypes.STRING,
+            allowNull: true,
+            unique: true,
         },
     }, {
         tableName: 'user',
         hooks: {
             beforeCreate: async (user) => {
-                user.password = await bcrypt.hash(user.password, 10);
+                if (user.password) {
+                    user.password = await bcrypt.hash(user.password, 10);
+                }
             },
             beforeUpdate: async (user) => {
-                if (user.changed('password')) {
+                if (user.changed('password') && user.password) {
                     user.password = await bcrypt.hash(user.password, 10);
                 }
             },

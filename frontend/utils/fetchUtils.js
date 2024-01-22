@@ -1,5 +1,4 @@
-
-import { NextResponse } from 'next/server'
+import {NextResponse} from 'next/server'
 
 const uri = process.env.APP_ENV === 'development' ? 'http://localhost:4000/api' : 'https://bookolog.com/api';
 
@@ -29,7 +28,6 @@ export async function fetchFeaturedBooks() {
             console.error('Error:', error);
             throw error;
         });
-
 }
 
 export async function fetchTrendingBooks() {
@@ -51,9 +49,7 @@ export async function fetchTrendingBooks() {
 
 export async function incrementView(id) {
     return fetch('http://backend:4000/api/book/increment-view', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ id }),
+        method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({id}),
     }).then((response) => {
         if (!response.ok) {
             throw new Error('Network response was not ok');
@@ -187,12 +183,58 @@ export async function fetchAllGenres() {
 export async function fetchRegister(credentials) {
     try {
         const response = await fetch(`http://backend:4000/auth/register`, {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(credentials),
+            method: "POST", headers: {"Content-Type": "application/json"}, body: JSON.stringify(credentials),
         });
 
         return response.json();
+
+    } catch (error) {
+        console.error('Error:', error.message);
+        throw error;
+    }
+}
+
+
+export async function fetchComment(bookId, userId, commentText) {
+    try {
+        const response = await fetch(`${uri}/comment/add`, {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json',},
+            body: JSON.stringify({bookId, userId, commentText}),
+        });
+
+        return response.json();
+
+    } catch (error) {
+        console.error('Error:', error.message);
+        throw error;
+    }
+}
+
+export async function fetchReply(bookId, userId, replyText, parentCommentId) {
+    try {
+        const response = await fetch(`${uri}/comment/add-reply`, {
+            method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({
+                bookId, userId, commentText: replyText, parentCommentId,
+            }),
+        });
+
+        return response.json();
+
+    } catch (error) {
+        console.error('Error:', error.message);
+        throw error;
+    }
+}
+
+export async function fetchGetComment(bookId) {
+    try {
+        const response = await fetch(`${uri}/comment/get?book_id=${bookId}`, {
+            method: 'GET', headers: {'Content-Type': 'application/json'},
+        });
+
+        return response.json();
+
     } catch (error) {
         console.error('Error:', error.message);
         throw error;
@@ -200,11 +242,8 @@ export async function fetchRegister(credentials) {
 }
 
 export async function fetchAuthorize(credentials) {
-
     return fetch(`http://backend:4000/auth/authorize`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(credentials)
+        method: "POST", headers: {"Content-Type": "application/json"}, body: JSON.stringify(credentials)
     }).then((response) => {
 
         return response.json();
@@ -212,12 +251,34 @@ export async function fetchAuthorize(credentials) {
         console.error('Error:', error);
         throw error;
     });
+}
 
+export async function fetchAuthorizedUser(credentials) {
+    return fetch(`http://backend:4000/auth/user`, {
+        method: "POST", headers: {"Content-Type": "application/json"}, body: JSON.stringify(credentials)
+    }).then((response) => {
+        return response.json();
+    }).catch((error) => {
+        console.error('Error:', error);
+        throw error;
+    });
+}
+
+
+export async function fetchProviderAuthorize(credentials) {
+    return fetch(`http://backend:4000/auth/provider-authorize`, {
+        method: "POST", headers: {"Content-Type": "application/json"}, body: JSON.stringify(credentials)
+    }).then((response) => {
+        return response.json();
+    }).catch((error) => {
+        console.error('Error:', error);
+        throw error;
+    });
 }
 
 export async function fetchBookById(getByd) {
 
-    return fetch(`${uri}/book/${getByd}`).then((response) => {
+    return fetch(`http:/backend:4000/api/book/${getByd}`).then((response) => {
         if (!response.ok) {
             throw new Error('Network response was not ok');
         }
@@ -231,3 +292,39 @@ export async function fetchBookById(getByd) {
             throw error;
         });
 }
+
+
+export async function fetchUser(id) {
+
+    return fetch(`${uri}/user/${id}`).then((response) => {
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
+        }
+        return response.json();
+    }).then((data) => {
+        return data;
+    }).catch((error) => {
+        console.error('Error:', error);
+        throw error;
+    });
+
+}
+
+
+export async function updateUser(user) {
+
+    return fetch(`${uri}/user/update`, {
+        method: "POST", headers: {"Content-Type": "application/json"}, body: JSON.stringify(user)
+    }).then((response) => {
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
+        }
+        return response.json();
+    }).catch((error) => {
+        console.error('Error:', error);
+        throw error;
+    });
+}
+
+
+

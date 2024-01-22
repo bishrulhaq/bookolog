@@ -3,6 +3,8 @@ const bookRoutes = require('./routes/bookRoutes');
 const authorRoutes = require('./routes/authorRoutes');
 const categoryRoutes = require('./routes/categoryRoutes');
 const authRoutes = require('./routes/authRoutes');
+const commentRoutes = require('./routes/commentRoutes');
+const userRoutes = require('./routes/userRoutes');
 // const syncDatabase = require('./scripts/sync');
 const db = require('./models');
 
@@ -35,6 +37,12 @@ app.use('/api/author', authorRoutes);
 
 // Category Routes
 app.use('/api/category', categoryRoutes);
+
+// Comment Routes
+app.use('/api/comment', commentRoutes);
+
+// Comment Routes
+app.use('/api/user', userRoutes);
 
 // Sync Database and Start Server
 function connectToDatabaseWithRetry(retryCount = 0) {

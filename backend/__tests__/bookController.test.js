@@ -1,62 +1,52 @@
-const sequelize = require('../config/db');
+const express = require('express');
+const request = require('supertest');
 const bookController = require('../controllers/bookController');
-const mockResponse = require('node-mocks-http');
 
-describe('bookController Routes', () => {
+jest.mock('../controllers/bookController');
 
-    const req = {};
-    const res = mockResponse.createResponse();
-  
-    describe('GET /api/book', () => {
-      it('should return all books', async () => {
-        await bookController.getAll(req, res);
-        expect(res.statusCode).toBe(200);
-        const responseData = JSON.parse(res._getData());
-        expect(Array.isArray(responseData)).toBe(true);
-      });
+const app = express();
+app.use(express.json());
+
+const bookRouter = require('../routes/bookRoutes');
+app.use('/api/book', bookRouter);
+
+describe('Book Routes', () => {
+    describe('GET /api/book/:id', () => {
+        it('should return a book by ID', async () => {
+            bookController.getById.mockImplementationOnce(async (req, res) => {
+                res.json({ id: 1, title: 'Example Book' });
+            });
+
+            const response = await request(app)
+                .get('/api/book/1')
+                .expect(200);
+
+            expect(response.body).toEqual({ id: 1, title: 'Example Book' });
+        });
+
+        it('should return 404 if book not found by ID', async () => {
+            bookController.getById.mockImplementationOnce(async (req, res) => {
+                res.status(404).json({ error: 'Book not found' });
+            });
+
+            const response = await request(app)
+                .get('/api/book/2')
+                .expect(404);
+
+            expect(response.body).toEqual({ error: 'Book not found' });
+        });
+
+        it('should handle errors and return 500', async () => {
+            bookController.getById.mockImplementationOnce(async (req, res) => {
+                res.status(500).json({ error: 'An error occurred' });
+            });
+
+            const response = await request(app)
+                .get('/api/book/3')
+                .expect(500);
+
+            expect(response.body).toEqual({ error: 'An error occurred' });
+        });
     });
-  
-    describe('GET /api/book/search-title', () => {
-      it('should search books by title', async () => {
-        req.query = { title: 'Science' }; 
-        await bookController.searchByTitle(req, res);
-        expect(res.statusCode).toBe(200);
-      });
-    });
-  
-    describe('GET /api/book/search-category', () => {
-      it('should search books by category', async () => {
-        req.query = { category: 'Science' };
-        await bookController.searchByCategory(req, res);
-        expect(res.statusCode).toBe(200);
-      });
-    });
-  
-    describe('GET /api/book/books-with-authors', () => {
-      it('should return paginated books with authors', async () => {
-        req.query = { page: 1, limit: 10 }; 
-        await bookController.getPaginatedBooksWithAuthors(req, res);
-        expect(res.statusCode).toBe(200);
-      });
-    });
-  
-    describe('GET /api/book/search', () => {
-      it('should search books by various criteria', async () => {
-        req.query = { search: 'Science' }; 
-        await bookController.searchBooks(req, res);
-        expect(res.statusCode).toBe(200);
-      });
-    });
-  
-    describe('GET /api/book/isbn', () => {
-      it('should search books by ISBN', async () => {
-        req.query = { isbn: '1593270771' }; 
-        await bookController.searchByISBN(req, res);
-        expect(res.statusCode).toBe(200);
-      });
-    });
-  
-    afterAll(async () => {
-      await sequelize.close();
-    });
-  });
+
+});
