@@ -2,6 +2,7 @@
 const nextConfig = {
   darkMode: 'class',
   experimental: {
+    outputStandalone: true,
     serverActions: true,
   },
   theme: {
