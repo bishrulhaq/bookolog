@@ -60,7 +60,8 @@ export const authOptions = {
             if (trigger === 'update' && session?.user) {
                 token.name = session?.user.first_name + ' ' + session?.user?.last_name;
             }
-            return {...token, ...user};
+
+            return {...token, ...user , ...account};
         }, async session({session, token}) {
             session.user = token;
             return session;

@@ -42,7 +42,7 @@ const updateUserDetails = ({session, status, update, setNotification}) => {
 
     const fetchUserData = async () => {
         try {
-            const response = await fetchUser(session?.user?.id);
+            const response = await fetchUser(session?.user?.id, session?.user?.jti);
             const data = await response.data;
             setFormValues({
                 id: session?.user?.id,
@@ -58,6 +58,7 @@ const updateUserDetails = ({session, status, update, setNotification}) => {
     };
 
     useEffect(() => {
+        console.log(session);
         if (status === "authenticated") {
             fetchUserData();
         }

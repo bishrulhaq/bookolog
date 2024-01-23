@@ -7,6 +7,7 @@ import NavBar from "@/components/NavBar";
 import SearchBar from "@/components/SearchBar";
 import {usePathname} from 'next/navigation'
 import GenreCarousel from "@/components/GenreCarousel";
+import { GoogleTagManager } from '@next/third-parties/google'
 
 export default function RootLayout({children, session}) {
 
@@ -19,6 +20,7 @@ export default function RootLayout({children, session}) {
     return (
         <html lang="en" suppressHydrationWarning>
         <link rel="icon" href="/favicon.ico" sizes="any"/>
+        <GoogleTagManager gtmId="G-Q3P2Z5JCEL" />
         <body className='min-h-screen dark:bg-gray-800 bg-white duration-300'>
         <SessionProvider session={session}>
             <Provider>
