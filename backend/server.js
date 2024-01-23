@@ -3,7 +3,11 @@ const bookRoutes = require('./routes/bookRoutes');
 const authorRoutes = require('./routes/authorRoutes');
 const categoryRoutes = require('./routes/categoryRoutes');
 const authRoutes = require('./routes/authRoutes');
+const commentRoutes = require('./routes/commentRoutes');
+const userRoutes = require('./routes/userRoutes');
+const bookInteractionRoutes = require('./routes/bookInteraction')
 // const syncDatabase = require('./scripts/sync');
+
 const db = require('./models');
 
 require('dotenv').config()
@@ -15,14 +19,10 @@ const cors = require('cors')
 
 const app = express();
 
-// Enable CORS
-app.use(cors());
-
 // Middleware
 app.use(express.json());
-
-// Parse URL-encoded bodies (as sent by HTML forms)
 app.use(express.urlencoded({ extended: true }));
+app.use(cors());
 
 // Auth Routes
 app.use('/auth', authRoutes);
@@ -36,29 +36,38 @@ app.use('/api/author', authorRoutes);
 // Category Routes
 app.use('/api/category', categoryRoutes);
 
+// Comment Routes
+app.use('/api/comment', commentRoutes);
+
+// Comment Routes
+app.use('/api/user', userRoutes);
+
+// User Book Interaction
+app.use('/api/user-book', bookInteractionRoutes);
+
 // Sync Database and Start Server
 function connectToDatabaseWithRetry(retryCount = 0) {
-  db.sequelize
-    .authenticate()
-    .then(() => {
-      console.log('Database connected 🚀');
+    db.sequelize
+        .authenticate()
+        .then(() => {
+            console.log('Database connected 🚀');
 
-      app.listen(PORT, async () => {
-        console.log(`Server is running on port ${PORT} 🚀`);
-      });
-    })
-    .catch((err) => {
-      console.error('Error connecting to the database:', err);
-      if (retryCount < maxRetries) {
-        console.log(`Retrying database connection in ${retryInterval / 1000} seconds...`);
-        setTimeout(() => {
-          connectToDatabaseWithRetry(retryCount + 1);
-        }, retryInterval);
-      } else {
-        console.error('Max retry attempts reached. Exiting...');
-        process.exit(1);
-      }
-    });
+            app.listen(PORT, async () => {
+                console.log(`Server is running on port ${PORT} 🚀`);
+            });
+        })
+        .catch((err) => {
+            console.error('Error connecting to the database:', err);
+            if (retryCount < maxRetries) {
+                console.log(`Retrying database connection in ${retryInterval / 1000} seconds...`);
+                setTimeout(() => {
+                    connectToDatabaseWithRetry(retryCount + 1);
+                }, retryInterval);
+            } else {
+                console.error('Max retry attempts reached. Exiting...');
+                process.exit(1);
+            }
+        });
 }
 
 connectToDatabaseWithRetry();

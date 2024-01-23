@@ -27,17 +27,36 @@ module.exports = {
         type: Sequelize.STRING,
         allowNull: true,
       },
+      date_of_birth: {
+        type: Sequelize.DATE,
+        allowNull: true,
+      },
+      gender: {
+        type: Sequelize.ENUM('male', 'female', 'prefer_not_to_say'),
+        allowNull: true,
+        validate: {
+          isIn: {
+            args: [['male', 'female', 'prefer_not_to_say']],
+            msg: 'Gender must be one of: male, female, prefer_not_to_say',
+          },
+        },
+      },
       image: {
         type: Sequelize.STRING,
         allowNull: true,
       },
       provider: {
-        type: Sequelize.STRING,
+        type: Sequelize.JSON,
         allowNull: true,
       },
       password: {
         type: Sequelize.STRING,
-        allowNull: false,
+        allowNull: true,
+      },
+      google_sub: {
+        type: Sequelize.STRING,
+        allowNull: true,
+        unique: true,
       },
       createdAt: {
         type: Sequelize.DATE,

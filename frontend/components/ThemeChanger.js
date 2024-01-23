@@ -5,7 +5,10 @@ const ThemeChanger = () => {
   const [mounted, setMounted] = useState(false);
   const { theme, setTheme } = useTheme();
 
-  // useEffect only runs on the client, so now we can safely show the UI
+  const darkModeListener = (checked) => {
+    setTheme(checked ? 'dark' : 'light')
+  };
+
   useEffect(() => {
     setMounted(true);
   }, []);
@@ -15,18 +18,23 @@ const ThemeChanger = () => {
   }
 
   return (
-    <div className="flex items-center space-x-2">
-      <label className="text-white">Theme:</label>
-      <select
-        value={theme}
-        onChange={(e) => setTheme(e.target.value)}
-        className="rounded-md bg-gray-800 text-white p-2 focus:outline-none"
-      >
-        <option value="system">System</option>
-        <option value="dark">Dark</option>
-        <option value="light">Light</option>
-      </select>
-    </div>
+    <label className="flex items-center cursor-pointer">
+      <div className="relative">
+        <input
+          type="checkbox"
+          name="dark-mode"
+          id="dark-toggle"
+          className="checkbox hidden"
+          onChange={(e) => darkModeListener(e.target.checked)}
+          checked={theme === 'dark'}
+        />
+        <div className="block border-[1px] dark:border-white border-gray-900 w-8 h-5 rounded-full"></div>
+        <div className="dot absolute left-1 top-1 dark:bg-white bg-gray-800 w-3 h-3 rounded-full transition"></div>
+      </div>
+      <div className={`ml-3 dark:text-white text-gray-900 font-medium ${theme === 'dark' ? 'moon' : 'sun'}`}>
+        {theme === 'dark' ? '🌙' : '☀️'}
+      </div>
+    </label>
   );
 };
 

@@ -1,5 +1,5 @@
 # Use an official Node.js runtime as a parent image
-FROM node:18.15.0-alpine
+FROM node:21.2.0-alpine3.17
 
 # Set the working directory in the container
 WORKDIR /app/backend

@@ -1,25 +1,37 @@
-
 "use client"
-import Header from '@/components/Header'
-import Footer from '@/components/Footer'
-import { Provider } from "@/components/Provider"
-import { SessionProvider } from "next-auth/react"
+import {Provider} from "@/components/Provider"
+import {SessionProvider} from "next-auth/react"
 import './globals.css'
+import Footer from "@/components/Footer";
+import NavBar from "@/components/NavBar";
+import SearchBar from "@/components/SearchBar";
+import {usePathname} from 'next/navigation'
+import GenreCarousel from "@/components/GenreCarousel";
+import { GoogleTagManager } from '@next/third-parties/google'
 
-export default function RootLayout({ children, session }) {
+export default function RootLayout({children, session}) {
 
-  return (
-    <html lang="en" suppressHydrationWarning>
-      <link rel="icon" href="/favicon.ico" sizes="any" />
-      <body className='min-h-screen dark:bg-gray-800 bg-white'>
+    const currentRoute = usePathname();
+
+    function isNotExcludedRoute(route) {
+        return !['/login', '/about', '/lounge', '/register', '/settings', '/user/test'].includes(route);
+    }
+
+    return (
+        <html lang="en" suppressHydrationWarning>
+        <link rel="icon" href="/favicon.ico" sizes="any"/>
+        <GoogleTagManager gtmId="G-Q3P2Z5JCEL" />
+        <body className='min-h-screen dark:bg-gray-800 bg-white duration-300'>
         <SessionProvider session={session}>
-          <Provider>
-            <Header />
-            {children}
-            <Footer />
-          </Provider>
+            <Provider>
+                <NavBar/>
+                <SearchBar/>
+                {isNotExcludedRoute(currentRoute) && <GenreCarousel className="mx-auto max-w-screen-xl"/>}
+                {children}
+                <Footer/>
+            </Provider>
         </SessionProvider>
-      </body>
-    </html>
-  )
+        </body>
+        </html>
+    )
 }

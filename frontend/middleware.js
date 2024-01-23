@@ -10,9 +10,15 @@ export default withAuth(
             return NextResponse.next();
         if (session && req.nextUrl.pathname === '/login')
             return NextResponse.redirect(
-                new URL('/club', req.url)
+                new URL('/lounge', req.url)
             );
-        if (!session && req.nextUrl.pathname === '/club')
+
+        if (!session && req.nextUrl.pathname === '/lounge')
+            return NextResponse.redirect(
+                new URL('/login', req.url)
+            );
+
+        if (!session && req.nextUrl.pathname === '/settings')
             return NextResponse.redirect(
                 new URL('/login', req.url)
             );
@@ -25,6 +31,7 @@ export default withAuth(
         }
     }
 )
+
 export const config = {
     matcher: [
         '/((?!api|_next/static|_next/image|favicon.ico).*)',
