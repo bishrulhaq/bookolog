@@ -82,7 +82,7 @@ export async function fetchBooksByTitle(searchByTitle) {
 }
 
 export async function fetchAuthorById(getById) {
-    return fetch(`${uri}/author/${getById}`).then((response) => {
+    return fetch(`${uri}/api/author/${getById}`).then((response) => {
         if (!response.ok) {
             throw new Error('Network response was not ok');
         }
