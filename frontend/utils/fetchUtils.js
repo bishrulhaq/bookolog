@@ -1,6 +1,6 @@
 import {NextResponse} from 'next/server'
 
-const uri = process.env.APP_ENV === 'development' ? 'http://localhost:4000/api' : 'https://bookolog.com/api';
+const uri = process.env.BACKEND_URL;
 
 export async function fetchBooks(page, limit) {
     return fetch(`${uri}/book?page=${page || 1}&limit=${limit || 20}`).then((response) => {
@@ -48,7 +48,7 @@ export async function fetchTrendingBooks() {
 }
 
 export async function incrementView(id) {
-    return fetch('http://backend:4000/api/book/increment-view', {
+    return fetch(`${uri}/book/increment-view`, {
         method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({id}),
     }).then((response) => {
         if (!response.ok) {
@@ -182,7 +182,7 @@ export async function fetchAllGenres() {
 
 export async function fetchRegister(credentials) {
     try {
-        const response = await fetch(`http://backend:4000/auth/register`, {
+        const response = await fetch(`${uri}/auth/register`, {
             method: "POST", headers: {"Content-Type": "application/json"}, body: JSON.stringify(credentials),
         });
 
@@ -295,7 +295,7 @@ export async function fetchReply(bookId, userId, replyText, parentCommentId) {
 
 
 export async function fetchAuthorize(credentials) {
-    return fetch(`http://backend:4000/auth/authorize`, {
+    return fetch(`${uri}/auth/authorize`, {
         method: "POST", headers: {"Content-Type": "application/json"}, body: JSON.stringify(credentials)
     }).then((response) => {
 
@@ -307,7 +307,7 @@ export async function fetchAuthorize(credentials) {
 }
 
 export async function fetchAuthorizedUser(credentials) {
-    return fetch(`http://backend:4000/auth/user`, {
+    return fetch(`${uri}/auth/user`, {
         method: "POST", headers: {"Content-Type": "application/json"}, body: JSON.stringify(credentials)
     }).then((response) => {
         return response.json();
@@ -318,7 +318,7 @@ export async function fetchAuthorizedUser(credentials) {
 }
 
 export async function fetchProviderUser(credentials) {
-    return fetch(`http://backend:4000/auth/provider-user`, {
+    return fetch(`${uri}/auth/provider-user`, {
         method: "POST", headers: {"Content-Type": "application/json"}, body: JSON.stringify(credentials)
     }).then((response) => {
         return response.json();
@@ -329,7 +329,7 @@ export async function fetchProviderUser(credentials) {
 }
 
 export async function fetchProviderAuthorize(credentials) {
-    return fetch(`http://backend:4000/auth/provider-authorize`, {
+    return fetch(`${uri}/auth/provider-authorize`, {
         method: "POST", headers: {"Content-Type": "application/json"}, body: JSON.stringify(credentials)
     }).then((response) => {
 
@@ -348,7 +348,7 @@ export async function fetchProviderAuthorize(credentials) {
 
 export async function fetchBookById(id) {
 
-    return fetch(`http://backend:4000/api/book/${id}`, {
+    return fetch(`${uri}/book/${id}`, {
         method: "GET", headers: {"Content-Type": "application/json"}
     }).then((response) => {
 
@@ -441,7 +441,7 @@ export async function fetchQuote() {
 
 export async function fetchUserInteraction(book_id, user_id, token) {
 
-    return fetch(`http://backend:4000/api/user-book/get-interaction`, {
+    return fetch(`${uri}/user-book/get-interaction`, {
         method: "POST", headers: {
             "Content-Type": "application/json", "Authorization": `Bearer ${token}`,
         }, body: JSON.stringify({book_id: book_id, user_id: user_id})
@@ -546,7 +546,7 @@ export async function fetchTimeline(code, token) {
 }
 
 export async function fetchUserByUUID(uuid) {
-    return fetch(`http://backend:4000/api/user/uuid`, {
+    return fetch(`${uri}/user/uuid`, {
         method: "POST", headers: {"Content-Type": "application/json"}, body: JSON.stringify({uuid: uuid})
     }).then((response) => {
 

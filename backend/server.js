@@ -34,7 +34,7 @@ app.use('/images/profile_picture', express.static(path.join(__dirname, '/images/
 app.use('/images/cover_image', express.static(path.join(__dirname, '/images/cover_image')));
 
 // Auth Routes
-app.use('/auth', authRoutes);
+app.use('/api/auth', authRoutes);
 
 // Book Routes
 app.use('/api/book', bookRoutes);
