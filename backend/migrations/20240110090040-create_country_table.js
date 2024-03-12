@@ -15,6 +15,7 @@ module.exports = {
             },
             code: {
                 type: Sequelize.STRING,
+                unique: true,
                 allowNull: false,
             },
             dial_code: {

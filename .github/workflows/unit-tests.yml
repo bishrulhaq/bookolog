@@ -21,7 +21,7 @@ jobs:
         options: --health-cmd="healthcheck.sh --connect --innodb_initialized" --health-interval=10s --health-timeout=5s --health-retries=3
 
     env:
-      DB_HOST: mariadb
+      DB_HOST: localhost
       DB_USER: root
       DB_NAME: testdatabase
       DB_PASSWORD: root_test
@@ -35,7 +35,7 @@ jobs:
       - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: 14
+          node-version: 20
 
       - name: Set up environment variables
         run: |
@@ -48,6 +48,10 @@ jobs:
       - name: Install dependencies
         working-directory: ./backend
         run: npm install
+
+      - name: Run database migrations
+        working-directory: ./backend
+        run: npm run migrate
 
       - name: Run Jest tests
         working-directory: ./backend

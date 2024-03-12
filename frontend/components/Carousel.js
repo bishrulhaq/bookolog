@@ -1,6 +1,7 @@
 "use client"
 
 import { useState, useEffect } from 'react';
+import Image from "next/image";
 
 const Carousel = () => {
     const images = [
@@ -38,7 +39,7 @@ const Carousel = () => {
                         className={`absolute w-full h-full ${index === currentIndex ? 'block' : 'hidden'
                             } transition-opacity duration-500`}
                     >
-                        <span className="absolute top-1/2 left-1/2 text-2xl font-semibold text-white -translate-x-1/2 -translate-y-1/2 sm:text-3xl dark:text-gray-800">First Slide</span>
+                        {/*<span className="absolute top-1/2 left-1/2 text-2xl font-semibold text-white -translate-x-1/2 -translate-y-1/2 sm:text-3xl dark:text-gray-800">First Slide</span>*/}
                         <img
                             src={image}
                             alt={`Image ${index}`}

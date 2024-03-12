@@ -44,13 +44,15 @@ router.get('/search-authors', ipWhitelistMiddleware, bookController.searchByAuth
 router.get('/isbn', bookController.searchByISBN);
 
 // Define a route to get all books
-// Example : http://localhost:4000/api/book/id?id
+// Example : http://localhost:4000/api/book?id
 router.get('/:id', ipWhitelistMiddleware, bookController.getById);
+
+// Define a route to get book by id
+// Example : http://localhost:4000/api/book/listing/id
+router.get('/listing/:id', ipWhitelistMiddleware, bookController.getBookByIdForListing);
 
 // Define a route to increase views
 // Example : http://localhost:4000/api/book/increment-view
 router.post('/increment-view', ipWhitelistMiddleware, bookController.incrementView);
-
-
 
 module.exports = router;

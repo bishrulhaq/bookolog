@@ -2,11 +2,11 @@
 import {Provider} from "@/components/Provider"
 import {SessionProvider} from "next-auth/react"
 import './globals.css'
-import Footer from "@/components/Footer";
-import NavBar from "@/components/NavBar";
-import SearchBar from "@/components/SearchBar";
+import Footer from "@/components/Footer"
+import NavBar from "@/components/NavBar"
+import SearchBar from "@/components/SearchBar"
 import {usePathname} from 'next/navigation'
-import GenreCarousel from "@/components/GenreCarousel";
+import GenreCarousel from "@/components/GenreCarousel"
 import { GoogleTagManager } from '@next/third-parties/google'
 
 export default function RootLayout({children, session}) {

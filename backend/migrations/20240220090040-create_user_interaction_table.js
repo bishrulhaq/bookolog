@@ -24,16 +24,8 @@ module.exports = {
                 type: Sequelize.BOOLEAN,
                 allowNull: true,
             },
-            isFavorite: {
-                type: Sequelize.BOOLEAN,
-                allowNull: true,
-            },
-            isReading: {
-                type: Sequelize.BOOLEAN,
-                allowNull: true,
-            },
-            isToRead: {
-                type: Sequelize.BOOLEAN,
+            read_status: {
+                type: Sequelize.ENUM('reading', 'toRead', 'completed'),
                 allowNull: true,
             },
             createdAt: {

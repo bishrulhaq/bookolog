@@ -1,4 +1,5 @@
 const bcrypt = require('bcrypt');
+const { v4: uuidv4 } = require('uuid');
 
 module.exports = function (sequelize, DataTypes) {
     const user = sequelize.define('user', {
@@ -7,7 +8,17 @@ module.exports = function (sequelize, DataTypes) {
             allowNull: false,
             unique: true,
         },
+        unique_id: {
+            type: DataTypes.UUID,
+            defaultValue: DataTypes.UUIDV4,
+            allowNull: false,
+            unique: true,
+        },
         name: {
+            type: DataTypes.STRING,
+            allowNull: true,
+        },
+        country_code: {
             type: DataTypes.STRING,
             allowNull: true,
         },
@@ -56,6 +67,9 @@ module.exports = function (sequelize, DataTypes) {
             beforeCreate: async (user) => {
                 if (user.password) {
                     user.password = await bcrypt.hash(user.password, 10);
+                }
+                if (!user.unique_id) {
+                    user.unique_id = uuidv4();
                 }
             },
             beforeUpdate: async (user) => {

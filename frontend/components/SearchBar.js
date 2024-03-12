@@ -54,7 +54,6 @@ const SearchBar = () => {
 
   useEffect(() => {
     if (debouncedSearch) {
-      console.log(debouncedSearch);
       if (debouncedSearch.length > 0 && !debouncedSearch.startsWith(' ')) {
         handleSearch();
       } else {

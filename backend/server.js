@@ -4,8 +4,12 @@ const authorRoutes = require('./routes/authorRoutes');
 const categoryRoutes = require('./routes/categoryRoutes');
 const authRoutes = require('./routes/authRoutes');
 const commentRoutes = require('./routes/commentRoutes');
+const nudgeRoutes = require('./routes/nudgeRoutes');
+const commonRoutes = require('./routes/commonRoutes');
 const userRoutes = require('./routes/userRoutes');
 const bookInteractionRoutes = require('./routes/bookInteraction')
+const path = require('path');
+const multer = require('multer');
 // const syncDatabase = require('./scripts/sync');
 
 const db = require('./models');
@@ -18,11 +22,16 @@ const PORT = process.env.PORT || 4000;
 const cors = require('cors')
 
 const app = express();
+const upload = multer();
 
 // Middleware
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
 app.use(cors());
+app.use(express.json());
+app.use(express.urlencoded({extended: true}));
+// app.use(upload.array());
+
+app.use('/images/profile_picture', express.static(path.join(__dirname, '/images/profile_picture')));
+app.use('/images/cover_image', express.static(path.join(__dirname, '/images/cover_image')));
 
 // Auth Routes
 app.use('/auth', authRoutes);
@@ -38,6 +47,12 @@ app.use('/api/category', categoryRoutes);
 
 // Comment Routes
 app.use('/api/comment', commentRoutes);
+
+// Nudge Routes
+app.use('/api/nudge', nudgeRoutes);
+
+// Common Routes
+app.use('/api/com', commonRoutes);
 
 // Comment Routes
 app.use('/api/user', userRoutes);
