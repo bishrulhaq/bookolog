@@ -49,6 +49,10 @@ jobs:
         working-directory: ./backend
         run: npm install
 
+      - name: Run database migrations
+        working-directory: ./backend
+        run: npx sequelize-cli db:migrate  
+
       - name: Run Jest tests
         working-directory: ./backend
         run: npm test
