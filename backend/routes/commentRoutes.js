@@ -11,6 +11,10 @@ router.post('/add', ipWhitelistMiddleware, commentController.addComment);
 // Example : http://localhost:4000/api/comment/add-reply
 router.post('/add-reply', ipWhitelistMiddleware, commentController.addReply);
 
+// Define a route to get reply
+// Example : http://localhost:4000/api/comment/get-reply
+router.get('/get-reply/:id', ipWhitelistMiddleware, commentController.getReply);
+
 // Define a route to get all comment and reply
 // Example : http://localhost:4000/api/comment/get
 router.get('/get', ipWhitelistMiddleware, commentController.getComment);

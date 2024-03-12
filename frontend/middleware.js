@@ -1,8 +1,8 @@
-import { withAuth } from "next-auth/middleware"
-import { NextResponse } from 'next/server';
+import {withAuth} from "next-auth/middleware"
+import {NextResponse} from 'next/server';
+import jwt from "jsonwebtoken";
 
-export default withAuth(
-    function middleware(req) {
+export default withAuth(function middleware(req) {
 
         const session = req?.nextauth?.token
 
@@ -25,15 +25,17 @@ export default withAuth(
 
         return NextResponse.next();
     },
+
     {
+        secret: process.env.NEXTAUTH_SECRET,
+        jwt: {
+            secret: process.env.NEXTAUTH_SECRET
+        },
         callbacks: {
             authorized: () => true,
         }
-    }
-)
+    })
 
 export const config = {
-    matcher: [
-        '/((?!api|_next/static|_next/image|favicon.ico).*)',
-    ],
+    matcher: ['/((?!api|_next/static|_next/image|favicon.ico).*)',],
 }

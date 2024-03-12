@@ -39,7 +39,6 @@ services:
     build:
       context: ./frontend
       dockerfile: Dockerfile
-      network: host
     image: frontend:local
     container_name: frontend
     environment:
@@ -47,6 +46,7 @@ services:
       - CHOKIDAR_USEPOLLING=true
       - WATCHPACK_POLLING=true
       - NEXTAUTH_SECRET=sdfsdfdsfsdf3234sfsdfg
+      - API_URL=http://localhost:4000
     volumes:
       - ./frontend:/app/frontend
       - /app/frontend/node_modules

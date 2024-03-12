@@ -11,6 +11,10 @@ router.post('/authorize', ipWhitelistMiddleware, authController.authorize);
 // Example : http://localhost:4000/api/auth/user
 router.post('/user', ipWhitelistMiddleware, authController.getUser);
 
+// Route for getting the user
+// Example : http://localhost:4000/api/auth/provider-user
+router.post('/provider-user', ipWhitelistMiddleware, authController.getProviderUser);
+
 // Route for Provider login and Signup
 // Example : http://localhost:4000/auth/provider-authorize
 router.post('/provider-authorize', ipWhitelistMiddleware, authController.providerAuthorize);

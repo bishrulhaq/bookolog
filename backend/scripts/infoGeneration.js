@@ -1,4 +1,4 @@
-const { Sequelize } = require('sequelize');
+const { Sequelize,  } = require('sequelize');
 const OpenAI = require('openai');
 const { category } = require('../models');
 

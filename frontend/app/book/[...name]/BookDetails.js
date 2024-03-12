@@ -2,46 +2,12 @@ import Image from 'next/image';
 import Comment from '@/components/Comment';
 import { convertToTitleCase, sanitizedUri } from '@/utils';
 
-const BookDetails = ({book, isLoading}) => {
+const BookDetails = ({book, userInteraction}) => {
+
   return (
     <div className="flex justify-center items-center py-2">
       <div className="p-6 rounded-lg">
-        {isLoading ? (
-          <div className="text-center">
-            <svg width="100" height="30" viewBox="0 0 120 30" xmlns="http://www.w3.org/2000/svg" fill="#fff">
-              <circle cx="15" cy="15" r="15">
-                <animate attributeName="r" from="15" to="15"
-                  begin="0s" dur="0.8s"
-                  values="15;9;15" calcMode="linear"
-                  repeatCount="indefinite" />
-                <animate attributeName="fill-opacity" from="1" to="1"
-                  begin="0s" dur="0.8s"
-                  values="1;.5;1" calcMode="linear"
-                  repeatCount="indefinite" />
-              </circle>
-              <circle cx="60" cy="15" r="9" fill-opacity="0.3">
-                <animate attributeName="r" from="9" to="9"
-                  begin="0s" dur="0.8s"
-                  values="9;15;9" calcMode="linear"
-                  repeatCount="indefinite" />
-                <animate attributeName="fill-opacity" from="0.5" to="0.5"
-                  begin="0s" dur="0.8s"
-                  values=".5;1;.5" calcMode="linear"
-                  repeatCount="indefinite" />
-              </circle>
-              <circle cx="105" cy="15" r="15">
-                <animate attributeName="r" from="15" to="15"
-                  begin="0s" dur="0.8s"
-                  values="15;9;15" calcMode="linear"
-                  repeatCount="indefinite" />
-                <animate attributeName="fill-opacity" from="1" to="1"
-                  begin="0s" dur="0.8s"
-                  values="1;.5;1" calcMode="linear"
-                  repeatCount="indefinite" />
-              </circle>
-            </svg>
-          </div>
-        ) : book && book.length !== 0 ? (
+        { book && book.length !== 0 ? (
           <>
             <div className="py-2 px-4 mx-auto max-w-screen-xl gap-1 px-4 lg:flex">
               <div className="lg:w-3/12 xl:w-25/100 px-4 mt-5 text-center">
@@ -79,7 +45,9 @@ const BookDetails = ({book, isLoading}) => {
             </div>
 
 
-            <Comment bookId={book?.id ?? null} />
+
+
+            <Comment bookId={book?.id ?? null} userInteraction={userInteraction?.data ?? null}/>
 
           </>
         ) : (

@@ -211,6 +211,71 @@ export async function fetchComment(bookId, userId, commentText) {
     }
 }
 
+
+export async function fetchGetComment(bookId, limit, offset) {
+    try {
+        const response = await fetch(`${uri}/comment/get?book_id=${bookId}&offset=${offset}&limit=${limit}`, {
+            method: 'GET', headers: {'Content-Type': 'application/json'},
+        });
+
+        return response.json();
+
+    } catch (error) {
+        console.error('Error:', error.message);
+        throw error;
+    }
+}
+
+export async function fetchAddNudge(interactionId, userId, commentText, token) {
+    try {
+        const response = await fetch(`${uri}/nudge/add`, {
+            method: 'POST',
+            headers: {"Content-Type": "application/json", "Authorization": `Bearer ${token}`},
+            body: JSON.stringify({interactionId, userId, commentText}),
+        });
+
+        return response.json();
+
+    } catch (error) {
+        console.error('Error:', error.message);
+        throw error;
+    }
+}
+
+export async function fetchGetNudge(interactionId, limit, offset, token) {
+    try {
+
+        const response = await fetch(`${uri}/nudge/get?interactionId=${interactionId}&offset=${offset}&limit=${limit}`, {
+            method: 'GET',
+            headers: {"Content-Type": "application/json", "Authorization": `Bearer ${token}`},
+        });
+
+        return response.json();
+
+    } catch (error) {
+        console.error('Error:', error.message);
+        throw error;
+    }
+}
+
+
+
+
+
+export async function fetchReplyById(id) {
+    try {
+        const response = await fetch(`${uri}/comment/get-reply/${id}`, {
+            method: 'GET', headers: {'Content-Type': 'application/json'},
+        });
+
+        return response.json();
+
+    } catch (error) {
+        console.error('Error:', error.message);
+        throw error;
+    }
+}
+
 export async function fetchReply(bookId, userId, replyText, parentCommentId) {
     try {
         const response = await fetch(`${uri}/comment/add-reply`, {
@@ -227,19 +292,7 @@ export async function fetchReply(bookId, userId, replyText, parentCommentId) {
     }
 }
 
-export async function fetchGetComment(bookId) {
-    try {
-        const response = await fetch(`${uri}/comment/get?book_id=${bookId}`, {
-            method: 'GET', headers: {'Content-Type': 'application/json'},
-        });
 
-        return response.json();
-
-    } catch (error) {
-        console.error('Error:', error.message);
-        throw error;
-    }
-}
 
 export async function fetchAuthorize(credentials) {
     return fetch(`http://backend:4000/auth/authorize`, {
@@ -264,9 +317,8 @@ export async function fetchAuthorizedUser(credentials) {
     });
 }
 
-
-export async function fetchProviderAuthorize(credentials) {
-    return fetch(`http://backend:4000/auth/provider-authorize`, {
+export async function fetchProviderUser(credentials) {
+    return fetch(`http://backend:4000/auth/provider-user`, {
         method: "POST", headers: {"Content-Type": "application/json"}, body: JSON.stringify(credentials)
     }).then((response) => {
         return response.json();
@@ -276,9 +328,30 @@ export async function fetchProviderAuthorize(credentials) {
     });
 }
 
-export async function fetchBookById(getByd) {
+export async function fetchProviderAuthorize(credentials) {
+    return fetch(`http://backend:4000/auth/provider-authorize`, {
+        method: "POST", headers: {"Content-Type": "application/json"}, body: JSON.stringify(credentials)
+    }).then((response) => {
 
-    return fetch(`http:/backend:4000/api/book/${getByd}`).then((response) => {
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
+        }
+        return response.json();
+    })
+        .then((data) => {
+            return data;
+        }).catch((error) => {
+            console.error('Error:', error);
+            throw error;
+        });
+}
+
+export async function fetchBookById(id) {
+
+    return fetch(`http://backend:4000/api/book/${id}`, {
+        method: "GET", headers: {"Content-Type": "application/json"}
+    }).then((response) => {
+
         if (!response.ok) {
             throw new Error('Network response was not ok');
         }
@@ -294,11 +367,29 @@ export async function fetchBookById(getByd) {
 }
 
 
-export async function fetchUser(id, jwt) {
+export async function fetchBookByIdForListing(id) {
 
+    return fetch(`${uri}/book/listing/${id}`, {
+        method: "GET", headers: {"Content-Type": "application/json"}
+    }).then((response) => {
+
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
+        }
+        return response.json();
+    })
+        .then((data) => {
+            return data;
+        })
+        .catch((error) => {
+            console.error('Error:', error);
+            throw error;
+        });
+}
+
+export async function fetchUser(id, token) {
     return fetch(`${uri}/user/${id}`, {
-        method: "GET",
-        headers: {"Authorization": `Bearer ${jwt}`}
+        method: "GET", headers: {"Authorization": `Bearer ${token}`}
     }).then((response) => {
 
         if (!response.ok) {
@@ -315,10 +406,12 @@ export async function fetchUser(id, jwt) {
 }
 
 
-export async function updateUser(user) {
+export async function updateUser(user, token) {
 
     return fetch(`${uri}/user/update`, {
-        method: "POST", headers: {"Content-Type": "application/json"}, body: JSON.stringify(user)
+        method: "POST",
+        headers: {"Content-Type": "application/json", "Authorization": `Bearer ${token}`},
+        body: JSON.stringify(user)
     }).then((response) => {
         if (!response.ok) {
             throw new Error('Network response was not ok');
@@ -330,11 +423,65 @@ export async function updateUser(user) {
     });
 }
 
-
-export async function fetchInteraction(userId, bookId, interactionType, value) {
-    return fetch(`${uri}/user-book/interaction-status`, {
-        method: 'POST', headers: {
+export async function fetchQuote() {
+    return fetch(`${uri}/com/quote`, {
+        method: 'GET', headers: {
             'Content-Type': 'application/json',
+        },
+    }).then((response) => {
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
+        }
+        return response.json();
+    }).catch((error) => {
+        console.error('Error:', error);
+        throw error;
+    });
+}
+
+export async function fetchUserInteraction(book_id, user_id, token) {
+
+    return fetch(`http://backend:4000/api/user-book/get-interaction`, {
+        method: "POST", headers: {
+            "Content-Type": "application/json", "Authorization": `Bearer ${token}`,
+        }, body: JSON.stringify({book_id: book_id, user_id: user_id})
+    }).then((response) => {
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
+        }
+        return response.json();
+    }).then((data) => {
+        return data;
+    }).catch((error) => {
+        console.error('Error:', error);
+        throw error;
+    });
+}
+
+export async function fetchInteractionCount(book_id) {
+
+    return fetch(`${uri}/user-book/get-int-count/${book_id}`, {
+        method: "GET", headers: {
+            "Content-Type": "application/json"
+        }, cache: 'no-store',
+    }).then((response) => {
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
+        }
+        return response.json();
+    }).then((data) => {
+        return data;
+    }).catch((error) => {
+        console.error('Error:', error);
+        throw error;
+    });
+}
+
+
+export async function fetchSetInteraction(userId, bookId, interactionType, value, token) {
+    return fetch(`${uri}/user-book/update-interaction`, {
+        method: 'POST', headers: {
+            'Content-Type': 'application/json', "Authorization": `Bearer ${token}`
         }, body: JSON.stringify({userId, bookId, interactionType, value}),
     }).then((response) => {
         if (!response.ok) {
@@ -348,4 +495,90 @@ export async function fetchInteraction(userId, bookId, interactionType, value) {
 }
 
 
+export async function fetchCountries(token) {
+    return fetch(`${uri}/com/countries`, {
+        method: 'GET', headers: {
+            'Content-Type': 'application/json', "Authorization": `Bearer ${token}`
+        },
+    }).then((response) => {
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
+        }
+        return response.json();
+    }).catch((error) => {
+        console.error('Error:', error);
+        throw error;
+    });
+}
 
+export async function insertBookInteraction(formData, token) {
+
+    return fetch(`${uri}/user-book/insert-book-interaction`, {
+        method: "POST",
+        headers: {"Content-Type": "application/json", "Authorization": `Bearer ${token}`},
+        body: JSON.stringify({formData})
+    }).then((response) => {
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
+        }
+        return response.json();
+    }).catch((error) => {
+        console.error('Error:', error);
+        throw error;
+    });
+}
+
+
+export async function fetchTimeline(code, token) {
+
+    return fetch(`${uri}/user-book/timeline/${code}`, {
+        cache: 'no-cache',
+        method: "GET", headers: {"Content-Type": "application/json", "Authorization": `Bearer ${token}`}
+    }).then((response) => {
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
+        }
+        return response.json();
+    }).catch((error) => {
+        console.error('Error:', error);
+        throw error;
+    });
+}
+
+export async function fetchUserByUUID(uuid) {
+    return fetch(`http://backend:4000/api/user/uuid`, {
+        method: "POST", headers: {"Content-Type": "application/json"}, body: JSON.stringify({uuid: uuid})
+    }).then((response) => {
+
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
+        }
+        return response.json();
+    }).then((data) => {
+        return data;
+    }).catch((error) => {
+        console.error('Error:', error);
+        throw error;
+    });
+
+}
+
+export async function fetchProfilePicture(formData) {
+    return fetch(`${uri}/user/profile-picture`, {
+        cache: 'no-cache',
+        method: "POST",
+        body: formData
+    }).then((response) => {
+
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
+        }
+        return response.json();
+    }).then((data) => {
+        return data;
+    }).catch((error) => {
+        console.error('Error:', error);
+        throw error;
+    });
+
+}

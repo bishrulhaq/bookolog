@@ -36,7 +36,7 @@ export default function RegisterPage() {
                 redirect: false, email: formValues.email, password: formValues.password, callbackUrl: "/lounge",
             });
 
-            if (res?.status === 200 && res?.ok) {
+            if (res?.status === 200 || res?.ok) {
                 router.push("/lounge");
             } else {
                 setFieldError("general", "Invalid email or password");

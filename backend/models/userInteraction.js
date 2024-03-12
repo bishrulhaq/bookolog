@@ -1,19 +1,20 @@
 module.exports = function (sequelize, DataTypes) {
     const userInteraction = sequelize.define('userInteraction', {
         book_id: {
-            type: DataTypes.INTEGER, allowNull: false,
+            type: DataTypes.INTEGER,
+            allowNull: false,
         }, user_id: {
-            type: DataTypes.INTEGER, allowNull: false,
+            type: DataTypes.INTEGER,
+            allowNull: false,
         }, rating: {
-            type: DataTypes.INTEGER, allowNull: true,
+            type: DataTypes.INTEGER,
+            allowNull: true,
         }, liked: {
-            type: DataTypes.BOOLEAN, allowNull: true,
-        }, isFavorite: {
-            type: DataTypes.BOOLEAN, allowNull: true,
-        }, isReading: {
-            type: DataTypes.BOOLEAN, allowNull: true,
-        }, isToRead: {
-            type: DataTypes.BOOLEAN, allowNull: true,
+            type: DataTypes.BOOLEAN,
+            allowNull: true,
+        }, read_status: {
+            type: DataTypes.ENUM('reading', 'toRead', 'completed'),
+            allowNull: true,
         },
 
     }, {

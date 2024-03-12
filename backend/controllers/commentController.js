@@ -1,7 +1,6 @@
 const {Sequelize} = require('sequelize');
 const {bookComment, user} = require('../models');
 
-
 const commentController = {
     addComment: async (req, res) => {
         try {
@@ -21,6 +20,7 @@ const commentController = {
                         attributes: [
                             'id',
                             'email',
+                            'unique_id',
                             [
                                 Sequelize.fn(
                                     'COALESCE',
@@ -62,6 +62,43 @@ const commentController = {
                         attributes: [
                             'id',
                             'email',
+                            'unique_id',
+                            [
+                                Sequelize.fn(
+                                    'COALESCE',
+                                    Sequelize.fn('CONCAT', Sequelize.col('user.first_name'), ' ', Sequelize.col('user.last_name')),
+                                    Sequelize.col('user.name'),
+                                    Sequelize.col('user.email')
+                                ),
+                                'user_name'
+                            ]
+                        ]
+                    }
+                ]
+            });
+
+
+            res.status(201).json({success: true, data: replyWithUser});
+        } catch (error) {
+            console.error('Error adding reply:', error);
+            res.status(500).json({success: false, error: 'Internal Server Error'});
+        }
+    },
+
+    getReply: async (req, res) => {
+        try {
+
+            const {id} = req.params;
+            const replyWithUser = await bookComment.findAll({
+                where: {parent_comment_id: id},
+                order: [['createdAt', 'DESC']],
+                include: [
+                    {
+                        model: user,
+                        attributes: [
+                            'id',
+                            'email',
+                            'unique_id',
                             [
                                 Sequelize.fn(
                                     'COALESCE',
@@ -96,33 +133,21 @@ const commentController = {
                 order: [['createdAt', 'DESC']],
                 limit: parseInt(limit),
                 offset: parseInt(offset),
-                include: [
-                    {
-                        model: bookComment,
-                        as: 'replies',
-                        include: [
-                            {
-                                model: user, attributes: [
-                                    'id',
-                                    'email',
-                                    [
-                                        Sequelize.fn(
-                                            'COALESCE',
-                                            Sequelize.fn('CONCAT', Sequelize.col('user.first_name'), ' ', Sequelize.col('user.last_name')),
-                                            Sequelize.col('user.name'),
-                                            Sequelize.col('user.email')
-                                        ),
-                                        'user_name'
-                                    ]
-                                ]
-                            }
+                attributes: {
+                    include: [
+                        [
+                            Sequelize.literal(`(SELECT COUNT(*)FROM bookComment AS replies WHERE replies.parent_comment_id = bookComment.id)`),
+                            'reply_count',
                         ],
-                    },
+                    ],
+                },
+                include: [
                     {
                         model: user,
                         attributes: [
                             'id',
                             'email',
+                            'unique_id',
                             [
                                 Sequelize.fn(
                                     'COALESCE',
@@ -133,11 +158,17 @@ const commentController = {
                                 'user_name'
                             ]
                         ]
-                    }
+                    },
                 ],
             });
 
-            res.status(200).json({success: true, data: comments});
+            const total = await bookComment.count({
+                where: {
+                    book_id: book_id, parent_comment_id: null,
+                }
+            });
+
+            res.status(200).json({success: true, data: {comments: comments, total: total}});
         } catch (error) {
             res.status(500).json({success: false, error: 'Internal Server Error'});
         }

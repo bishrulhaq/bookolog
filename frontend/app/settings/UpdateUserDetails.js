@@ -4,14 +4,19 @@ import React, {useEffect, useState} from 'react';
 import DatePicker from 'react-datepicker';
 import "react-datepicker/dist/react-datepicker.css";
 import {Field, Formik} from "formik";
-import {fetchUser, updateUser} from "@/utils";
+import {fetchUser, updateUser, fetchCountries} from "@/utils";
+import {Combobox} from '@headlessui/react';
 
 const updateUserDetails = ({session, status, update, setNotification}) => {
 
+    const [query, setQuery] = useState('');
+    const [selectedCountry, setSelectedCountry] = useState(null);
+    const [countries, setCountries] = useState([]);
     const [formValues, setFormValues] = useState({
-        id: '', first_name: '', last_name: '', gender: '', date_of_birth: null, country: ''
+        id: '', first_name: '', last_name: '', gender: '', date_of_birth: null, country_code: ''
     });
 
+    const filteredCountries = query === '' ? countries : countries.filter((country) => country.name.toLowerCase().includes(query.toLowerCase()));
 
     const formValidate = (values) => {
 
@@ -33,34 +38,51 @@ const updateUserDetails = ({session, status, update, setNotification}) => {
             errors.gender = "Gender is required";
         }
 
-        if (!values.country) {
-            errors.country = "Country is required";
+        if (!values.country_code) {
+            errors.country_code = "Country is required";
         }
 
         return errors;
     };
 
+    const fetchCountry = async () => {
+        try {
+            if (session?.user?.j_token) {
+                const response = await fetchCountries(session?.user?.j_token);
+                const data = await response?.data;
+                setCountries(data);
+            }
+        } catch (error) {
+            console.error('Error fetching countries:', error);
+        }
+    };
+
     const fetchUserData = async () => {
         try {
-            const response = await fetchUser(session?.user?.id, session?.user?.jti);
+            const response = await fetchUser(session?.user?.id, session?.user?.j_token);
             const data = await response.data;
+
             setFormValues({
                 id: session?.user?.id,
                 first_name: data.first_name,
                 last_name: data.last_name,
                 gender: data.gender,
                 date_of_birth: data.date_of_birth ? new Date(data.date_of_birth) : null,
-                country: data.country
+                country_code: data.country_code
             });
+
+            const userCountry = await countries.find((country) => country.code === data?.country_code);
+            setSelectedCountry(userCountry);
         } catch (error) {
             console.error(error);
         }
     };
 
+
     useEffect(() => {
-        console.log(session);
         if (status === "authenticated") {
-            fetchUserData();
+            fetchCountry()
+            fetchUserData()
         }
     }, [status]);
 
@@ -69,7 +91,7 @@ const updateUserDetails = ({session, status, update, setNotification}) => {
         setNotification(null);
 
         try {
-            const response = await updateUser(formValues);
+            const response = await updateUser(formValues, session?.user?.j_token);
 
             if (response.status === 200) {
                 await update({user: formValues});
@@ -83,7 +105,40 @@ const updateUserDetails = ({session, status, update, setNotification}) => {
 
     };
 
-    return ( <div className="rounded bg-gray-50 dark:bg-gray-800">
+    return (status !== "authenticated" ? (<div className="flex text-center justify-center p-8">
+        <svg width="100" height="30" viewBox="0 0 120 30" xmlns="http://www.w3.org/2000/svg" fill="#fff">
+            <circle cx="15" cy="15" r="15">
+                <animate attributeName="r" from="15" to="15"
+                         begin="0s" dur="0.8s"
+                         values="15;9;15" calcMode="linear"
+                         repeatCount="indefinite"/>
+                <animate attributeName="fill-opacity" from="1" to="1"
+                         begin="0s" dur="0.8s"
+                         values="1;.5;1" calcMode="linear"
+                         repeatCount="indefinite"/>
+            </circle>
+            <circle cx="60" cy="15" r="9" fill-opacity="0.3">
+                <animate attributeName="r" from="9" to="9"
+                         begin="0s" dur="0.8s"
+                         values="9;15;9" calcMode="linear"
+                         repeatCount="indefinite"/>
+                <animate attributeName="fill-opacity" from="0.5" to="0.5"
+                         begin="0s" dur="0.8s"
+                         values=".5;1;.5" calcMode="linear"
+                         repeatCount="indefinite"/>
+            </circle>
+            <circle cx="105" cy="15" r="15">
+                <animate attributeName="r" from="15" to="15"
+                         begin="0s" dur="0.8s"
+                         values="15;9;15" calcMode="linear"
+                         repeatCount="indefinite"/>
+                <animate attributeName="fill-opacity" from="1" to="1"
+                         begin="0s" dur="0.8s"
+                         values="1;.5;1" calcMode="linear"
+                         repeatCount="indefinite"/>
+            </circle>
+        </svg>
+    </div>) : (<div className="rounded bg-gray-50 dark:bg-gray-800">
         <div className="p-8">
             <h2 className="text-lg font-medium text-gray-900 dark:text-white">Update User
                 Details</h2>
@@ -173,7 +228,7 @@ const updateUserDetails = ({session, status, update, setNotification}) => {
                                     id="gender"
                                     name="gender"
                                     className="mt-1 p-3 block w-full rounded-md shadow-sm border border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 dark:bg-gray-900 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white"
-                                    value={values.gender}
+                                    value={values?.gender}
                                     onChange={handleChange}
                                     onBlur={handleBlur}
                                 >
@@ -188,25 +243,32 @@ const updateUserDetails = ({session, status, update, setNotification}) => {
                         </div>
 
                         <div className="mt-4">
-                            <label htmlFor="country"
-                                   className="block text-sm font-medium text-gray-700 dark:text-gray-400 mb-2">
-                                Country
-                            </label>
-                            <select
-                                id="country"
-                                name="country"
-                                className="mt-1 p-3 block w-full rounded-md shadow-sm border border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 dark:bg-gray-900 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white"
-                                value={values.country}
-                                onChange={handleChange}
-                                onBlur={handleBlur}>
-                                <option value="" selected>Select the Country</option>
-                                <option value="LK">Sri Lanka</option>
-                                <option value="India">India</option>
-                                <option value="United States">United States</option>
-                                <option value="Other">Other</option>
-                            </select>
-                            {errors.country && touched.country && (
-                                <span className="text-red-600 pt-3">{errors.country}</span>)}
+                            <Combobox value={countries.find((country) => country.code === values?.country_code)} onChange={(country) => {
+                                setSelectedCountry(country);
+                                formik.setFieldValue('country_code', country.code);
+                            }}>
+                                <div className="relative"> {/* Wrapper for input and potential styling */}
+                                    <Combobox.Input
+                                        onChange={(event) => setQuery(event.target.value)}
+                                        displayValue={(country) => country?.name}
+                                        placeholder="Select country"
+                                        className="mt-1 p-3 block w-full rounded-md shadow-sm border border-gray-300 focus:border-grey-300 focus:ring focus:ring-grey-200 focus:ring-opacity-50 dark:bg-gray-900 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white"
+                                    />
+                                    {/* Add an icon if you'd like, positioned absolutely, etc. */}
+                                </div>
+                                <Combobox.Options
+                                    className="absolute z-10 mt-1 max-h-60 w-96 overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm">
+                                    {filteredCountries.map((country) => (
+                                        <Combobox.Option key={country.id} value={country}>
+                                            {({selected, active}) => (<div
+                                                className={`cursor-pointer select-none relative py-2 pl-8 pr-4 ${selected ? 'bg-gray-600 text-white' : 'text-gray-900'} ${active ? 'ring-2 ring-black-500' : ''}`}>
+                                                {country.name}
+                                            </div>)}
+                                        </Combobox.Option>))}
+                                </Combobox.Options>
+                            </Combobox>
+                            {errors.country_code && touched.country_code && (
+                                <span className="text-red-600 pt-3">{errors.country_code}</span>)}
                         </div>
 
                         <div className="mt-6">
@@ -221,7 +283,7 @@ const updateUserDetails = ({session, status, update, setNotification}) => {
                 }}
             </Formik>
         </div>
-    </div>)
+    </div>))
 }
 
 export default updateUserDetails;
