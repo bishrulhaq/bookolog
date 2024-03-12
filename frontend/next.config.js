@@ -3,7 +3,6 @@ const nextConfig = {
     darkMode: 'class',
     experimental: {
         outputStandalone: true,
-        serverActions: true,
         missingSuspenseWithCSRBailout: false,
     },
     images: {
