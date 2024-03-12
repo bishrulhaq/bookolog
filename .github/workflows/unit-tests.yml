@@ -35,7 +35,7 @@ jobs:
       - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: 14
+          node-version: 20
 
       - name: Set up environment variables
         run: |
@@ -51,7 +51,7 @@ jobs:
 
       - name: Run database migrations
         working-directory: ./backend
-        run: npx sequelize-cli db:migrate  
+        run: npm run migrate
 
       - name: Run Jest tests
         working-directory: ./backend
