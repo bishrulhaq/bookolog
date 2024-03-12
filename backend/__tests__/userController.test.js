@@ -17,6 +17,10 @@ describe('User Routes', () => {
 
     describe('POST /api/user/password', () => {
 
+        afterEach(() => {
+            jest.clearAllMocks();
+        });
+
         it('should change user password', async () => {
             userController.changePassword.mockImplementationOnce(async (req, res) => {
                 res.status(200).json({ message: 'Password changed successfully' });
