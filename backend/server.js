@@ -34,31 +34,31 @@ app.use('/images/profile_picture', express.static(path.join(__dirname, '/images/
 app.use('/images/cover_image', express.static(path.join(__dirname, '/images/cover_image')));
 
 // Auth Routes
-app.use('/auth', authRoutes);
+app.use('/v2/api/auth', authRoutes);
 
 // Book Routes
-app.use('/api/book', bookRoutes);
+app.use('/v2/api/book', bookRoutes);
 
 // Author Routes
-app.use('/api/author', authorRoutes);
+app.use('/v2/api/author', authorRoutes);
 
 // Category Routes
-app.use('/api/category', categoryRoutes);
+app.use('/v2/api/category', categoryRoutes);
 
 // Comment Routes
-app.use('/api/comment', commentRoutes);
+app.use('/v2/api/comment', commentRoutes);
 
 // Nudge Routes
-app.use('/api/nudge', nudgeRoutes);
+app.use('/v2/api/nudge', nudgeRoutes);
 
 // Common Routes
-app.use('/api/com', commonRoutes);
+app.use('/v2/api/com', commonRoutes);
 
 // Comment Routes
-app.use('/api/user', userRoutes);
+app.use('/v2/api/user', userRoutes);
 
 // User Book Interaction
-app.use('/api/user-book', bookInteractionRoutes);
+app.use('/v2/api/user-book', bookInteractionRoutes);
 
 // Sync Database and Start Server
 function connectToDatabaseWithRetry(retryCount = 0) {
