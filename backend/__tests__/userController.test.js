@@ -1,7 +1,6 @@
 const express = require('express');
 const request = require('supertest');
 const userController = require('../controllers/userController');
-const {sequelize, user} = require('../models');
 
 jest.mock('../controllers/userController');
 
@@ -17,20 +16,6 @@ app.use('/api/auth', authRouter);
 describe('User Routes', () => {
 
     describe('POST /api/user/password', () => {
-
-        let transaction;
-
-        beforeEach(async () => {
-            transaction = await sequelize.transaction();
-            await sequelize.models.token.truncate();
-            await sequelize.query('SET FOREIGN_KEY_CHECKS = 0');
-            await sequelize.models.user.truncate();
-            await sequelize.query('SET FOREIGN_KEY_CHECKS = 1');
-        });
-
-        afterEach(async () => {
-            await transaction.rollback();
-        });
 
         it('should change user password', async () => {
             userController.changePassword.mockImplementationOnce(async (req, res) => {
